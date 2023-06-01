@@ -42,13 +42,18 @@ export class SummarizationTool extends Tool implements SummaryTool {
     /** @ignore */
     async _call(input: string) {
         try {
-            // const [num, name] = parseInputs(input)
+            const [num, name] = parseInputs(input)
             console.log(typeof input, input)
             // return `${this.shellFile} ${name} ${num}`
             return JSON.stringify(
                 {
-                    shellFile: this.shellFile,
-                    param: input
+                    type: 'card',
+                    cardId: '51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema',
+                    cardData: {
+                        path: `${this.shellFile} ${name} ${num}`,
+                        num: num,
+                        name: name,
+                    }
                 }
             )
             // 判断filePath是否是一个文件

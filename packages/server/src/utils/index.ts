@@ -17,6 +17,9 @@ import {
 import { cloneDeep, get } from 'lodash'
 import { ICommonObject, getInputVariables } from 'flowise-components'
 import { scryptSync, randomBytes, timingSafeEqual } from 'crypto'
+import { buildTool as BuildRPATool } from './RPA';
+import { buildTool as buildAppTool } from './App';
+import { buildTool as buildOpenAPITool } from './OpenAPI';
 
 const QUESTION_VAR_PREFIX = 'question'
 
@@ -206,12 +209,24 @@ export const buildLangchain = async (
         if (!reactFlowNode || reactFlowNode === undefined || nodeIndex < 0) continue
 
         try {
-            // const nodeInstanceFilePath = componentNodes[reactFlowNode.data.name].filePath as string
-            const dir = path.join(__dirname, '../..', 'nodes')
-            const nodeInstanceFilePath = path.join(dir, `${reactFlowNode.data.name}.js`)
-            console.log(222, nodeInstanceFilePath)
-            const nodeModule = await import(nodeInstanceFilePath)
-            const newNodeInstance = new nodeModule.nodeClass()
+            let newNodeInstance
+            // 判断reactFlowNode是否包含manifest属性
+            if (reactFlowNode.data.manifest) {
+                const manifest = reactFlowNode.data.manifest
+                if (manifest.type === 0) {
+                    newNodeInstance = BuildRPATool(manifest)
+                } else if (manifest.type === 1) {
+                    newNodeInstance = buildAppTool(manifest)
+                } else if (manifest.type === 2) {
+                    newNodeInstance = buildOpenAPITool(manifest)
+                }
+            } else {
+                // const nodeInstanceFilePath = componentNodes[reactFlowNode.data.name].filePath as string
+                const dir = path.join(__dirname, '../..', 'nodes')
+                const nodeInstanceFilePath = path.join(dir, `${reactFlowNode.data.name}.js`)
+                const nodeModule = await import(nodeInstanceFilePath)
+                newNodeInstance = new nodeModule.nodeClass()
+            }
 
             let flowNodeData = cloneDeep(reactFlowNode.data)
             if (overrideConfig) flowNodeData = replaceInputsWithConfig(flowNodeData, overrideConfig)

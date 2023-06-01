@@ -480,10 +480,10 @@ export class App {
                     const chatmessage = this.AppDataSource.getRepository(ChatMessage).create(newChatMessage)
                     await this.AppDataSource.getRepository(ChatMessage).save(chatmessage)
                     const res = await chatQuery({ question: userMsg, history: [], userId: msg.senderStaffId }, id)
-                    apiContent = res?.text || res
+                    apiContent = res
                     try {
                         const result = JSON.parse(apiContent)
-                        if (result.shellFile) {
+                        if (result?.type === 'card') {
                             await sendCard(result, msg.senderStaffId, id, msg.robotCode)
                         } else {
                             await sendMsg(apiContent, msg.senderStaffId, id, msg.robotCode)

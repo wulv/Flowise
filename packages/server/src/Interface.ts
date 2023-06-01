@@ -65,8 +65,33 @@ export interface INodeData extends INodeDataFromComponent {
     inputAnchors: INodeParams[]
     inputParams: INodeParams[]
     outputAnchors: INodeParams[]
+    manifest?: IManifest
+}
+export interface IManifest {
+  schema_version: string;
+  name_for_human: string;
+  name_for_model: string;
+  description_for_model: string;
+  description_for_human: string;
+  type: number;
+  api_for_model: Apiformodel;
+  api_for_framework: Apiforframework;
 }
 
+interface Apiforframework {
+  type: string;
+  url: string;
+  is_user_authenticated: boolean;
+  method: string;
+  params: Inputparam;
+}
+
+interface Apiformodel {
+  input_param: Inputparam;
+}
+
+interface Inputparam {
+}
 export interface IReactFlowNode {
     id: string
     position: {

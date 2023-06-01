@@ -106,7 +106,7 @@ export const sendMsg = async (msg: string, uid: string, chatFlowId: string, robo
 }
 
 // 使用axios发送卡片
-export const sendCard = async (msg: { shellFile: string; param: string }, uid: string, chatFlowId: string, robotCode: string) => {
+export const sendCard = async (msg: { cardId: string; cardData: any }, uid: string, chatFlowId: string, robotCode: string) => {
     const dataSource = getDataSource()
     const chatflow = await dataSource.getRepository(ChatFlow).findOneBy({
         id: chatFlowId
@@ -114,22 +114,19 @@ export const sendCard = async (msg: { shellFile: string; param: string }, uid: s
     if (!chatflow?.robot) {
         return -1
     }
-    const [name, ...rest] = msg.param.split(' ')
     const robot = JSON.parse(chatflow.robot)
     const accessToken = await getAccessToken(robot.robotAppKey, robot.robotAppSecret)
     const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
             {
-                cardTemplateId: '51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema',
+                cardTemplateId: msg.cardId,
                 singleChatReceiver: JSON.stringify({ userId: uid }),
                 cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
                 robotCode: robotCode,
                 // callbackUrl: 'String',
                 cardData: JSON.stringify({
-                    path: `${msg.shellFile} ${msg.param}`,
-                    name: name,
-                    num: rest.join(',')
+                    ...msg.cardData,
                 }),
                 // userIdPrivateDataMap: 'String',
                 // unionIdPrivateDataMap: 'String',
