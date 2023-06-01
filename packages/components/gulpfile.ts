@@ -40,7 +40,8 @@ function hasExportNodeClass(filePath: string) {
           platform: 'node',
           external: [
             'langchain',
-            'axios'
+            'axios',
+            'typeorm'
           ]
         }))
         .pipe(gulp.dest(`${DIST_DIR}`));

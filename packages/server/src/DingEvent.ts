@@ -163,6 +163,25 @@ export const sendOutgoingMsg = async (msg: string, webhook: string) => {
     return res
 }
 
+// 使用axios让钉钉机器人给某个人发送消息
+export const sendOutgoingCardMsg = async (msg: string, webhook: string) => {
+    const res = await axios.post(
+        webhook,
+        {
+            msgtype: 'text',
+            text: {
+                content: msg
+            }
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    )
+    return res
+}
+
 // 使用axios下载钉钉机器人发送的文件
 export const getDownloadFileUrl = async (downloadCode: string, id: string, robotCode: string) => {
     const dataSource = getDataSource()

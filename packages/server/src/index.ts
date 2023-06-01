@@ -125,6 +125,11 @@ export class App {
             return res.json(returnData)
         })
 
+        this.app.delete('/api/v1/nodes/all', async (req: Request, res: Response) => {
+            await this.AppDataSource.getRepository(Node).clear()
+            return res.json({ message: 'success' })
+        })
+
         // 写入node数据库
         this.app.post('/api/v1/node', async (req: Request, res: Response) => {
             const body = req.body
