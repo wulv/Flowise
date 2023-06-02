@@ -8,7 +8,8 @@ export const buildTool = (manifest: IManifest) => {
     const name = manifest?.name_for_human || ''
     const type = manifest?.name_for_model || ''
     const description = manifest?.description_for_human || ''
-
+    // @ts-ignore
+    const script_url = manifest?.api_for_framework?.script_url || ''
     let inputs: any[] = []
 
     console.log(properties, 'properties')
@@ -40,11 +41,15 @@ export const buildTool = (manifest: IManifest) => {
                 webhook: string
             
                 input: string
+                cardId?: string
             
                 constructor(fields: any) {
                     super()
                     this.description =  manifest.description_for_model
                     this.name = name
+                    if (fields?.cardId) {
+                        this.cardId = fields.cardId
+                    }
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
@@ -53,6 +58,18 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
+                    if (script_url && this.cardId) {
+                        return JSON.stringify(
+                            {
+                                type: 'card',
+                                cardId: this.cardId,
+                                cardData: {
+                                    script_url: `${script_url}`,
+                                    input: `${input}`
+                                }
+                            }
+                        )
+                    }
                     try {
                         const headers = { "Content-Type": "application/json" };
                         const body = JSON.stringify({ input: input });
@@ -69,7 +86,9 @@ export const buildTool = (manifest: IManifest) => {
                     }
                 }
             }
-            const tool = new RPATool({})
+            const tool = new RPATool({
+                cardId: nodeData.inputs?.cardId
+            })
     
             return tool
 

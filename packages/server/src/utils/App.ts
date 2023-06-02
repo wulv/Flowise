@@ -63,7 +63,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new RPATool({})
-
+            
             return tool
         }
     }
