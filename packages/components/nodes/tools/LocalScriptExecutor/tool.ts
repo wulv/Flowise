@@ -48,7 +48,7 @@ export class SummarizationTool extends Tool implements SummaryTool {
             return JSON.stringify(
                 {
                     type: 'card',
-                    cardId: '51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema',
+                    cardId: '71d23134-770a-48b6-a57c-092860dc5e82.schema',
                     cardData: {
                         path: `${this.shellFile} ${name} ${num}`,
                         num: num,
