@@ -237,7 +237,6 @@ export const buildLangchain = async (
             let flowNodeData = cloneDeep(reactFlowNode.data)
             if (overrideConfig) flowNodeData = replaceInputsWithConfig(flowNodeData, overrideConfig)
             const reactFlowNodeData: INodeData = resolveVariables(flowNodeData, flowNodes, question)
-            console.log('reactFlowNodeData', JSON.stringify(reactFlowNodeData, null, 2))
             
             flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNodeData, question)
 
@@ -245,9 +244,9 @@ export const buildLangchain = async (
             console.error(111, e)
             throw new Error(e)
         }
-
         const neighbourNodeIds = graph[nodeId]
         const nextDepth = depth + 1
+        console.log('neighbourNodeIds', neighbourNodeIds)
 
         // Find other nodes that are on the same depth level
         const sameDepthNodeIds = Object.keys(depthQueue).filter((key) => depthQueue[key] === nextDepth)
