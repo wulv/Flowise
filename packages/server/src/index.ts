@@ -895,6 +895,7 @@ export class App {
                         incomingInput.question,
                         incomingInput?.overrideConfig
                     )
+                    console.log(JSON.stringify(reactFlowNodes, null, 2)
 
                     const nodeToExecute = reactFlowNodes.find((node: IReactFlowNode) => node.id === endingNodeId)
                     if (!nodeToExecute) return res.status(404).send(`Node ${endingNodeId} not found`)
