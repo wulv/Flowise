@@ -213,11 +213,12 @@ export const buildLangchain = async (
             // 判断reactFlowNode是否包含manifest属性
             if (reactFlowNode.data.manifest) {
                 const manifest = reactFlowNode.data.manifest
-                if (manifest.type === 0) {
+                console.log('manifest', manifest)
+                if (+manifest.type === 0) {
                     newNodeInstance = BuildRPATool(manifest)
-                } else if (manifest.type === 1) {
+                } else if (+manifest.type === 1) {
                     newNodeInstance = buildAppTool(manifest)
-                } else if (manifest.type === 2) {
+                } else if (+manifest.type === 2) {
                     newNodeInstance = buildOpenAPITool(manifest)
                 }
             } else {
