@@ -38,7 +38,7 @@ import {
 } from './utils'
 import { cloneDeep } from 'lodash'
 import { getDataSource } from './DataSource'
-import { NodesPool } from './NodesDbPool'
+import { NodesPool } from './NodesPool'
 import { ChatFlow } from './entity/ChatFlow'
 import { OutgoingRobot } from './entity/OutgoingRobot'
 import { ChatMessage } from './entity/ChatMessage'
@@ -142,6 +142,11 @@ export class App {
             await this.nodesPool.initialize(this.AppDataSource)
 
             return res.json(results)
+        })
+        // 更新node数据库
+        this.app.put('/api/v1/node/:name', async (req: Request, res: Response) => {
+            const body = req.body
+            const id = req.params.name
         })
 
         // Get specific component node via name
@@ -899,10 +904,15 @@ export class App {
                     this.chatflowPool.add(chatflowid, nodeToExecuteData, startingNodes, incomingInput?.overrideConfig)
                 }
 
+                let nodeInstanceFilePath
+                if (this.nodesPool.componentNodes[nodeToExecuteData.name].filePath) {
+                    nodeInstanceFilePath = this.nodesPool.componentNodes[nodeToExecuteData.name].filePath as string
+                } else {
+                    const dir = path.join(__dirname, '..', 'nodes')
+                    nodeInstanceFilePath = path.join(dir, `${nodeToExecuteData.name}.js`)
+                }
                 // const nodeInstanceFilePath = this.nodesPool.componentNodes[nodeToExecuteData.name].filePath as string
-                const dir = path.join(__dirname, '..', 'nodes')
-                const nodeInstanceFilePath = path.join(dir, `${nodeToExecuteData.name}.js`)
-
+               
                 const nodeModule = await import(nodeInstanceFilePath)
                 const nodeInstance = new nodeModule.nodeClass()
 

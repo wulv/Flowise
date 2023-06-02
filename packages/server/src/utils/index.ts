@@ -221,9 +221,15 @@ export const buildLangchain = async (
                     newNodeInstance = buildOpenAPITool(manifest)
                 }
             } else {
+                let nodeInstanceFilePath = ''
+                if (componentNodes[reactFlowNode.data.name].filePath) {
+                    nodeInstanceFilePath = componentNodes[reactFlowNode.data.name].filePath as string
+                } else {
+                    const dir = path.join(__dirname, '../..', 'nodes')
+                    nodeInstanceFilePath = path.join(dir, `${reactFlowNode.data.name}.js`)
+                }
                 // const nodeInstanceFilePath = componentNodes[reactFlowNode.data.name].filePath as string
-                const dir = path.join(__dirname, '../..', 'nodes')
-                const nodeInstanceFilePath = path.join(dir, `${reactFlowNode.data.name}.js`)
+             
                 const nodeModule = await import(nodeInstanceFilePath)
                 newNodeInstance = new nodeModule.nodeClass()
             }
