@@ -2,7 +2,7 @@ import { INode, INodeData } from 'flowise-components'
 import { IManifest } from '../Interface'
 import { Tool } from 'langchain/tools'
 
-export const buildTool = async (manifest: IManifest) => {
+export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
     const properties = manifest?.api_for_model?.input_param?.properties
     const name = manifest?.name_for_human || ''
