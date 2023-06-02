@@ -37,7 +37,7 @@ export class SummarizationTool extends Tool implements SummaryTool {
     /** @ignore */
     async _call(input: string) {
         try {
-            const [num, name] = parseInputs(input)
+            const [namesList, orderList] = parseInputs(input)
             console.log(typeof input, input)
             // return `${this.shellFile} ${name} ${num}`
             return JSON.stringify(
@@ -45,9 +45,9 @@ export class SummarizationTool extends Tool implements SummaryTool {
                     type: 'card',
                     cardId: '71d23134-770a-48b6-a57c-092860dc5e82.schema',
                     cardData: {
-                        path: `${this.shellFile} ${name} ${num}`,
-                        num: num,
-                        name: name,
+                        path: `${this.shellFile} ${namesList} ${orderList}`,
+                        namesList: namesList,
+                        orderList: orderList,
                     }
                 }
             )
