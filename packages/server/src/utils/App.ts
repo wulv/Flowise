@@ -46,6 +46,7 @@ export const buildTool = (manifest: IManifest) => {
                     this.description = manifest.description_for_model
                     this.name = name
                     this.webhook = manifest.api_for_framework?.url
+                    this.returnDirect = true
                 }
 
                 /** @ignore */
@@ -63,7 +64,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new RPATool({})
-            
+
             return tool
         }
     }
