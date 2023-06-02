@@ -52,14 +52,17 @@ export const buildTool = (manifest: IManifest) => {
                 async _call(input: string) {
                     try {
                         const headers = { "Content-Type": "application/json" };
-                        const body = JSON.stringify({ input: input });
+                        const body = JSON.stringify({ input: input || ''  });
+                        const option: any = {
+                          method: manifest.api_for_framework?.method,
+                          headers,
+                        }
+                        if (manifest.api_for_framework?.method?.toUpperCase() === 'POST') {
+                            option.body = body
+                        }
                         // @ts-ignore
-                        const response = await fetch(this.webhook, {
-                            method: manifest.api_for_framework?.method,
-                            headers,
-                            body,
-                        }).then((res: any) => res.json());
-                        return response;
+                        const response = await fetch(this.webhook, option).then((res: any) => res.json());
+                        return JSON.stringify(response);
                     } catch (error) {
                         console.log(error)
                         return '111'
