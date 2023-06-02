@@ -80,6 +80,9 @@ export const buildTool = (manifest: IManifest) => {
                             headers,
                             body,
                         }).then((res: any) => res.json());
+                        if (response.result === true) {
+                            return '正在执行中...'
+                        }
                         return JSON.stringify(response);
                     } catch (error) {
                         console.log(error)
