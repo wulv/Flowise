@@ -32,6 +32,7 @@ export const buildTool = (manifest: IManifest) => {
         baseClasses: [type,],
         inputs: inputs,
         init: async (nodeData: INodeData) => {
+          console.log('nodeData', nodeData)
             class OpenApiTool extends Tool {
                 name: string
             
@@ -70,7 +71,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new OpenApiTool({})
-    
+            console.log('tool', tool)
             return tool
 
         }
