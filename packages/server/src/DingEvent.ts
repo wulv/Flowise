@@ -70,7 +70,7 @@ export const getAccessToken = async (appKey: string, appSecret: string) => {
 }
 
 // 使用axios让钉钉机器人给某个人发送消息
-export const sendMsg = async (msg: string, uid: string, chatFlowId: string, robotCode: string) => {
+export const sendMsg = async (msg: string, data: any, chatFlowId: string, robotCode: string) => {
     const dataSource = getDataSource()
     const chatflow = await dataSource.getRepository(ChatFlow).findOneBy({
         id: chatFlowId
@@ -80,15 +80,38 @@ export const sendMsg = async (msg: string, uid: string, chatFlowId: string, robo
     }
     const robot = JSON.parse(chatflow.robot)
     const accessToken = await getAccessToken(robot.robotAppKey, robot.robotAppSecret)
-    const res = await axios
+    if (data.conversationType === '2') {
+        // 群消息
+        const res = await axios.post(
+            data.sessionWebhook,
+            {
+                msgtype: 'text',
+                at: {
+                    atUserIds: [
+                        data.senderStaffId
+                    ]
+                },
+                text: {
+                    content: msg
+                }
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        return res
+    } else if (data.conversationType === '1') {
+        // 单聊消息
+        const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/robot/oToMessages/batchSend`,
             {
                 robotCode: robotCode,
-                userIds: [uid],
+                userIds: [data.senderStaffId],
                 msgKey: 'sampleMarkdown',
                 msgParam: JSON.stringify({
-                    title: '合同法务数字专员',
                     text: msg
                 })
             },
@@ -103,10 +126,12 @@ export const sendMsg = async (msg: string, uid: string, chatFlowId: string, robo
             tokenMap[robot.robotAppKey] = ''
         })
     return res
+    }
+
 }
 
 // 使用axios发送卡片
-export const sendCard = async (msg: { cardId: string; cardData: any }, uid: string, chatFlowId: string, robotCode: string) => {
+export const sendCard = async (msg: { cardId: string; cardData: any }, data: any, chatFlowId: string, robotCode: string) => {
     const dataSource = getDataSource()
     const chatflow = await dataSource.getRepository(ChatFlow).findOneBy({
         id: chatFlowId
@@ -116,12 +141,13 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, uid: stri
     }
     const robot = JSON.parse(chatflow.robot)
     const accessToken = await getAccessToken(robot.robotAppKey, robot.robotAppSecret)
-    const res = await axios
+    if (data.conversationType === '2') {
+        const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
             {
                 cardTemplateId: msg.cardId,
-                singleChatReceiver: JSON.stringify({ userId: uid }),
+                openConversationId: data.conversationId,
                 cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
                 robotCode: robotCode,
                 // callbackUrl: 'String',
@@ -142,29 +168,39 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, uid: stri
             tokenMap[robot.robotAppKey] = ''
         })
     return res
+    } else if (data.conversationType === '1') {
+        const res = await axios
+        .post(
+            `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
+            {
+                cardTemplateId: msg.cardId,
+                singleChatReceiver: JSON.stringify({ userId: data.senderStaffId }),
+                cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
+                robotCode: robotCode,
+                // callbackUrl: 'String',
+                cardData: JSON.stringify({
+                    ...msg.cardData,
+                }),
+                // userIdPrivateDataMap: 'String',
+                // unionIdPrivateDataMap: 'String',
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-acs-dingtalk-access-token': accessToken
+                }
+            }
+        )
+        .catch(() => {
+            tokenMap[robot.robotAppKey] = ''
+        })
+    return res
+    }
+
 }
 
 // 使用axios让钉钉机器人给某个人发送消息
 export const sendOutgoingMsg = async (msg: string, webhook: string) => {
-    const res = await axios.post(
-        webhook,
-        {
-            msgtype: 'text',
-            text: {
-                content: msg
-            }
-        },
-        {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    )
-    return res
-}
-
-// 使用axios让钉钉机器人给某个人发送消息
-export const sendOutgoingCardMsg = async (msg: string, webhook: string) => {
     const res = await axios.post(
         webhook,
         {
@@ -327,4 +363,27 @@ export async function chatQuery(data: any, id: string) {
 //   text: { content: '213' },
 //   robotCode: process.env.ROBOT_CODE,
 //   msgtype: 'text'
+// }
+
+// 从群里面at消息
+// {
+//     conversationId: 'cidraSn4YDuffDzsYQ58k/yDg==',
+//     atUsers: [ { dingtalkId: '$:LWCP_v1:$45LeNF0sHlfPGqY6blqCPV7SpjMWQH2P' } ],
+//     chatbotCorpId: 'ding9f50b15bccd16741',
+//     chatbotUserId: '$:LWCP_v1:$45LeNF0sHlfPGqY6blqCPV7SpjMWQH2P',
+//     msgId: 'msgOGcphHiDNmgUzVPQd8+40Q==',
+//     senderNick: '无弃-主用钉',
+//     isAdmin: false,
+//     senderStaffId: '014137215855333467698',
+//     sessionWebhookExpiredTime: 1685675396165,
+//     createAt: 1685669995960,
+//     senderCorpId: 'ding9f50b15bccd16741',
+//     conversationType: '2',
+//     senderId: '$:LWCP_v1:$LFKV2MooATDyVin8mj4gAW6EYwGKsnj7',
+//     conversationTitle: '无弃-主用钉,宵何（主用钉）,翔川',
+//     isInAtList: true,
+//     sessionWebhook: 'https://oapi.dingtalk.com/robot/sendBySession?session=7933aa08adf3bf78e8060acb91d8b007',
+//     text: { content: ' 你是谁？' },
+//     robotCode: 'dinga9sdnaquzckrysp5',
+//     msgtype: 'text'
 // }

@@ -445,11 +445,11 @@ export class App {
             const data = req.body
             if (data?.text?.content === '清除历史消息') {
                 await this.AppDataSource.getRepository(ChatMessage).delete({ chatflowid: data.conversationId })
-                await sendMsg('历史消息已清除', data.senderStaffId, req.params.id, data.robotCode)
+                await sendMsg('历史消息已清除', data, req.params.id, data.robotCode)
                 return res.json({ code: 0 })
             }
             if (this.cacheMap.get(data.conversationId)) {
-                await sendMsg('别催我，正在处理上一条消息呢！', data.senderStaffId, req.params.id, data.robotCode)
+                await sendMsg('别催我，正在处理上一条消息呢！', data, req.params.id, data.robotCode)
                 return res.json({ code: 0 })
             }
             this.cacheMap.set(data.conversationId, true)
@@ -466,9 +466,8 @@ export class App {
             // }))
             // // 取前20条历史记录
             // history.splice(0, history.length - 20)
-
+            const msg: IMessage = data
             try {
-                const msg: IMessage = data
                 let content = ''
                 let apiContent = ''
                 if (msg.msgtype === 'text') {
@@ -489,16 +488,16 @@ export class App {
                     try {
                         const result = JSON.parse(apiContent)
                         if (result?.type === 'card') {
-                            await sendCard(result, msg.senderStaffId, id, msg.robotCode)
+                            await sendCard(result, msg, id, msg.robotCode)
                         } else {
-                            await sendMsg(apiContent, msg.senderStaffId, id, msg.robotCode)
+                            await sendMsg(apiContent, msg, id, msg.robotCode)
                         }
                     } catch (error) {
-                        await sendMsg(apiContent, msg.senderStaffId, id, msg.robotCode)
+                        await sendMsg(apiContent, msg, id, msg.robotCode)
                         console.log(error)
                     }
                 } else if (msg.msgtype === 'file') {
-                    await sendMsg('文件已收到，正在处理', msg.senderStaffId, id, msg.robotCode)
+                    await sendMsg('文件已收到，正在处理', msg, id, msg.robotCode)
                     const { downloadCode } = msg.content
                     const pdfUrl = await getDownloadFileUrl(downloadCode, id, msg.robotCode)
                     const fileName = msg.content.fileId
@@ -524,7 +523,7 @@ export class App {
                         id
                     )
                     apiContent = res?.text || res
-                    await sendMsg(res?.text || res, msg.senderStaffId, id, msg.robotCode)
+                    await sendMsg(res?.text || res, msg, id, msg.robotCode)
                 }
                 // 保存历史记录
                 const newChatMessage = [
@@ -549,7 +548,7 @@ export class App {
             const id = req.params.id
             if (data.text?.content === '清除历史消息') {
                 await this.AppDataSource.getRepository(ChatMessage).delete({ chatflowid: data.conversationId })
-                await sendMsg('历史消息已清除', data.senderStaffId, id, data.robotCode)
+                await sendMsg('历史消息已清除', data, id, data.robotCode)
                 return res.json({ code: 0 })
             }
             const token = req.headers.token as string
