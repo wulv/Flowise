@@ -237,6 +237,8 @@ export const buildLangchain = async (
             let flowNodeData = cloneDeep(reactFlowNode.data)
             if (overrideConfig) flowNodeData = replaceInputsWithConfig(flowNodeData, overrideConfig)
             const reactFlowNodeData: INodeData = resolveVariables(flowNodeData, flowNodes, question)
+            console.log('reactFlowNodeData', JSON.stringify(reactFlowNodeData, null, 2))
+            
             flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNodeData, question)
 
         } catch (e: any) {

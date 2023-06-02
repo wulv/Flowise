@@ -884,7 +884,7 @@ export class App {
                     const constructedObj = constructGraphs(nodes, edges, true)
                     const nonDirectedGraph = constructedObj.graph
                     const { startingNodeIds, depthQueue } = getStartingNodes(nonDirectedGraph, endingNodeId)
-
+                    console.log('start reactFlowNodes')
                     /*** BFS to traverse from Starting Nodes to Ending Node ***/
                     const reactFlowNodes = await buildLangchain(
                         startingNodeIds,
