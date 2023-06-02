@@ -45,7 +45,8 @@ export const buildTool = (manifest: IManifest) => {
                     super()
                     this.description =  manifest.description_for_model
                     this.name = name
-                    this.webhook = manifest.api_for_framework?.webhook_url
+                    // @ts-ignore
+                    this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
             
                 }
