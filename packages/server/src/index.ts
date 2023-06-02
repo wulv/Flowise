@@ -282,7 +282,7 @@ export class App {
             const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
 
             return res.json({
-                url: `https://pre-devtool-admin.dingtalk.com/flowise/p/${results.id}`
+                url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
             })
         })
 
