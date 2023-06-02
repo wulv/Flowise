@@ -393,6 +393,7 @@ export function buildPreviewFlowData(t: any) {
                 data: {
                     id: 'calculator_0',
                     name: t.name,
+                    manifest: t.manifest,
                     label: t.label,
                     type: t.type,
                     category: t.category,
