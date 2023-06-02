@@ -238,10 +238,9 @@ export const buildLangchain = async (
             if (overrideConfig) flowNodeData = replaceInputsWithConfig(flowNodeData, overrideConfig)
             const reactFlowNodeData: INodeData = resolveVariables(flowNodeData, flowNodes, question)
             flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNodeData, question)
-            console.log('newNodeInstance', flowNodes[nodeIndex].data.instance)
 
         } catch (e: any) {
-            console.error(e)
+            console.error(111, e)
             throw new Error(e)
         }
 

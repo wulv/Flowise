@@ -929,7 +929,7 @@ export class App {
                 return res.json(result)
             }
         } catch (e: any) {
-            console.log(e)
+            console.log(444,e)
             return res.status(500).send(e.message)
         }
     }
