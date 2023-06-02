@@ -38,8 +38,6 @@ export class RPATool extends Tool implements SummaryTool {
                 body,
             }).then((res: any) => res.json());
             return response?.msg;
-            // const [num, name] = parseInputs(input)
-            console.log(typeof input, input)
             // return `${this.shellFile} ${name} ${num}`
             // 判断filePath是否是一个文件
            

@@ -45,7 +45,7 @@ export const buildTool = (manifest: IManifest) => {
                     super()
                     this.description =  manifest.description_for_model
                     this.name = name
-                    this.webhook = manifest.api_for_framework?.url
+                    this.webhook = manifest.api_for_framework?.webhook_url
                     this.returnDirect = true
             
                 }
@@ -57,11 +57,11 @@ export const buildTool = (manifest: IManifest) => {
                         const body = JSON.stringify({ input: input });
                         // @ts-ignore
                         const response = await fetch(this.webhook, {
-                            method: manifest.api_for_framework?.method,
+                            method: 'POST',
                             headers,
                             body,
                         }).then((res: any) => res.json());
-                        return response?.msg;
+                        return JSON.stringify(response);
                     } catch (error) {
                         console.log(error)
                         return '111'
