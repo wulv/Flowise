@@ -59,13 +59,14 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     if (script_url && this.cardId) {
+                        const inputs = input.split('|')
                         return JSON.stringify(
                             {
                                 type: 'card',
                                 cardId: this.cardId,
                                 cardData: {
                                     script_url: `${script_url}`,
-                                    input: `${input}`
+                                    inputs: inputs
                                 }
                             }
                         )
