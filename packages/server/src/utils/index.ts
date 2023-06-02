@@ -220,6 +220,7 @@ export const buildLangchain = async (
                 } else if (+manifest.type === 2) {
                     newNodeInstance = buildOpenAPITool(manifest)
                 }
+                // flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNode.data, question)
             } else {
                 let nodeInstanceFilePath = ''
                 if (componentNodes[reactFlowNode.data.name].filePath) {
@@ -276,7 +277,6 @@ export const buildLangchain = async (
             }
         }
     }
-    console.log(23, JSON.stringify(flowNodes, null, 2))
     
     return flowNodes
 }
