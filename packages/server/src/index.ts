@@ -47,6 +47,7 @@ import { ICommonObject } from 'flowise-components'
 import { IMessage, chatQuery, downloadPdf, getDownloadFileUrl, sendCard, sendMsg, sendOutgoingMsg } from './DingEvent'
 import { fork } from 'child_process'
 import { Node } from './entity/Node'
+import { buildPreviewFlowData } from './utils/Preview'
 
 export class App {
     cacheMap: Map<string, any> = new Map()
@@ -248,6 +249,41 @@ export class App {
         this.app.delete('/api/v1/chatflows/:id', async (req: Request, res: Response) => {
             const results = await this.AppDataSource.getRepository(ChatFlow).delete({ id: req.params.id })
             return res.json(results)
+        })
+
+        // 创建预览数据 chatflow
+        this.app.post('/api/v1/chatflows/preview', async (req: Request, res: Response) => {
+            const toolMeta = req.body as {
+                baseClasses: string[]
+                category: string
+                description: string
+                inputs: string[]
+                label: string
+                name: string
+                type: string
+                icon: string
+                manifest: any
+            }
+
+            // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
+            const body = {
+                name: `预览：${toolMeta.name}`,
+                flowData: JSON.stringify(buildPreviewFlowData(toolMeta)),
+                apikeyid: null,
+                deployed: false,
+                robot: null,
+                outgoingRobot: []
+            }
+
+            const newChatFlow = new ChatFlow()
+            Object.assign(newChatFlow, body)
+
+            const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
+            const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
+
+            return res.json({
+                url: `https://pre-devtool-admin.dingtalk.com/flowise/p/${results.id}`
+            })
         })
 
         // Save outgoingrobot info
