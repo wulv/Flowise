@@ -241,12 +241,11 @@ export const buildLangchain = async (
             flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNodeData, question)
 
         } catch (e: any) {
-            console.error(111, e)
+            console.log(111, e)
             throw new Error(e)
         }
         const neighbourNodeIds = graph[nodeId]
         const nextDepth = depth + 1
-        console.log('neighbourNodeIds', neighbourNodeIds)
 
         // Find other nodes that are on the same depth level
         const sameDepthNodeIds = Object.keys(depthQueue).filter((key) => depthQueue[key] === nextDepth)
