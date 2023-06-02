@@ -884,7 +884,6 @@ export class App {
                     const constructedObj = constructGraphs(nodes, edges, true)
                     const nonDirectedGraph = constructedObj.graph
                     const { startingNodeIds, depthQueue } = getStartingNodes(nonDirectedGraph, endingNodeId)
-                    console.log(2,JSON.stringify(constructedObj, null, 2))
 
                     /*** BFS to traverse from Starting Nodes to Ending Node ***/
                     const reactFlowNodes = await buildLangchain(
@@ -896,6 +895,7 @@ export class App {
                         incomingInput.question,
                         incomingInput?.overrideConfig
                     )
+                    console.log('reactFlowNodes', JSON.stringify(reactFlowNodes, null, 2))
 
                     const nodeToExecute = reactFlowNodes.find((node: IReactFlowNode) => node.id === endingNodeId)
                     if (!nodeToExecute) return res.status(404).send(`Node ${endingNodeId} not found`)

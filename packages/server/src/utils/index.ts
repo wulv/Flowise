@@ -276,6 +276,8 @@ export const buildLangchain = async (
             }
         }
     }
+    console.log(23, JSON.stringify(flowNodes, null, 2))
+    
     return flowNodes
 }
 
