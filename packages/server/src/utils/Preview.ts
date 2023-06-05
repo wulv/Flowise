@@ -399,7 +399,7 @@ export function buildPreviewFlowData(t: any) {
                     category: t.category,
                     description: t.description,
                     baseClasses: t.baseClasses,
-                    // filePath: 'https://bp0r55-node-js.oss.laf.dev/Calculator.js',
+                    filePath: t.filePath,
                     icon: t.icon,
                     inputs: {},
                     inputAnchors: [],
