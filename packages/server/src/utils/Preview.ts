@@ -1,4 +1,16 @@
 export function buildPreviewFlowData(nodeData: any, apiKey: string) {
+    nodeData = {
+        ...nodeData,
+        outputAnchors: [
+            {
+                id: `${nodeData.id}-output-${nodeData.label}-${nodeData.baseClasses.join('|')}`,
+                name: 'openAI',
+                label: 'OpenAI',
+                type: 'OpenAI | BaseLLM | BaseLanguageModel | BaseLangChain'
+            }
+        ]
+    }
+
     return {
         nodes: [
             {
@@ -323,7 +335,7 @@ export function buildPreviewFlowData(nodeData: any, apiKey: string) {
                 target: 'conversationalAgent_0',
                 targetHandle: 'conversationalAgent_0-input-tools-Tool',
                 type: 'buttonedge',
-                id: `${nodeData.outputAnchors[0].id}-conversationalAgent_0-conversationalAgent_0-input-tools-Tool`,
+                id: `${nodeData.id}-${nodeData.outputAnchors[0].id}-conversationalAgent_0-conversationalAgent_0-input-tools-Tool`,
                 data: {
                     label: ''
                 }
