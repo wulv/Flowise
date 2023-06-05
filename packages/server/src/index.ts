@@ -253,46 +253,54 @@ export class App {
 
         // 创建预览数据 chatflow
         this.app.post('/api/v1/chatflows/preview', async (req: Request, res: Response) => {
-            const ts = Date.now();
-            console.log('preview chatflow')
-            const apiKeys = await getAPIKeys();
-            console.log('apiKeys cost', Date.now() - ts);
-            const k = apiKeys.find(x => x.keyName.startsWith('pq_'));
-            const apiKey = `sk-${k?.keyName.split('_')[1]}`;
-            console.log('apiKey', apiKey);
-            const toolMeta = req.body as {
-                baseClasses: string[]
-                category: string
-                description: string
-                inputs: string[]
-                label: string
-                name: string
-                type: string
-                icon: string
-                manifest: any
+            try {
+                const ts = Date.now()
+                console.log('preview chatflow')
+                const apiKeys = await getAPIKeys()
+                console.log('apiKeys cost', Date.now() - ts)
+                const k = apiKeys.find((x) => x.keyName.startsWith('pq_'))
+                const apiKey = `sk-${k?.keyName.split('_')[1]}`
+                console.log('apiKey', apiKey)
+                const toolMeta = req.body as {
+                    baseClasses: string[]
+                    category: string
+                    description: string
+                    inputs: string[]
+                    label: string
+                    name: string
+                    type: string
+                    icon: string
+                    manifest: any
+                }
+
+                // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
+                const body = {
+                    name: `预览：${toolMeta.name}`,
+                    flowData: JSON.stringify(buildPreviewFlowData(toolMeta, apiKey)),
+                    apikeyid: null,
+                    deployed: false,
+                    robot: null,
+                    outgoingRobot: []
+                }
+                console.log('body builded', Date.now() - ts, body)
+
+                const newChatFlow = new ChatFlow()
+                Object.assign(newChatFlow, body)
+
+                const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
+                const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
+
+                console.log('results.id', Date.now() - ts, results.id)
+
+                return res.json({
+                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+                })
+            } catch (error) {
+                console.error(error);
+                return res.json({
+                    url: '',
+                });
             }
-
-            // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
-            const body = {
-                name: `预览：${toolMeta.name}`,
-                flowData: JSON.stringify(buildPreviewFlowData(toolMeta, apiKey)),
-                apikeyid: null,
-                deployed: false,
-                robot: null,
-                outgoingRobot: []
-            }
-
-            const newChatFlow = new ChatFlow()
-            Object.assign(newChatFlow, body)
-
-            const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
-            const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
-
-            console.log('results.id', Date.now() - ts, results.id);
-
-            return res.json({
-                url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
-            })
         })
 
         // Save outgoingrobot info
