@@ -253,6 +253,9 @@ export class App {
 
         // 创建预览数据 chatflow
         this.app.post('/api/v1/chatflows/preview', async (req: Request, res: Response) => {
+            const apiKeys = await getAPIKeys();
+            const k = apiKeys.find(x => x.keyName.startsWith('pq_'));
+            const apiKey = `sk-${k?.keyName.split('_')[1]}`;
             const toolMeta = req.body as {
                 baseClasses: string[]
                 category: string
@@ -268,7 +271,7 @@ export class App {
             // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
             const body = {
                 name: `预览：${toolMeta.name}`,
-                flowData: JSON.stringify(buildPreviewFlowData(toolMeta)),
+                flowData: JSON.stringify(buildPreviewFlowData(toolMeta, apiKey)),
                 apikeyid: null,
                 deployed: false,
                 robot: null,
