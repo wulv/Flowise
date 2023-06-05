@@ -253,9 +253,13 @@ export class App {
 
         // 创建预览数据 chatflow
         this.app.post('/api/v1/chatflows/preview', async (req: Request, res: Response) => {
+            const ts = Date.now();
+            console.log('preview chatflow')
             const apiKeys = await getAPIKeys();
+            console.log('apiKeys cost', Date.now() - ts);
             const k = apiKeys.find(x => x.keyName.startsWith('pq_'));
             const apiKey = `sk-${k?.keyName.split('_')[1]}`;
+            console.log('apiKey', apiKey);
             const toolMeta = req.body as {
                 baseClasses: string[]
                 category: string
@@ -283,6 +287,8 @@ export class App {
 
             const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
             const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
+
+            console.log('results.id', Date.now() - ts, results.id);
 
             return res.json({
                 url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
