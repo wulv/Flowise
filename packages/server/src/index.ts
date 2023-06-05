@@ -273,6 +273,8 @@ export class App {
                     manifest: any
                 }
 
+                console.log(toolMeta);
+
                 // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
                 const body = {
                     name: `预览：${toolMeta.name}`,
