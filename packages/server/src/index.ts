@@ -295,7 +295,7 @@ export class App {
                 return res.json({
                     url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
                 })
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error?.message)
                 console.log(error)
                 return res.json({
