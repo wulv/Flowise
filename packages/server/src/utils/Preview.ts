@@ -125,7 +125,7 @@ export function buildPreviewFlowData(nodeData: any) {
                     filePath: 'https://bp0r55-node-js.oss.laf.dev/OpenAI.js',
                     icon: 'https://bp0r55-node-js.oss.laf.dev/openai.png',
                     inputs: {
-                        openAIApiKey: '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',
+                        openAIApiKey: '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',
                         modelName: 'gpt-3.5-turbo',
                         temperature: 0.7,
                         maxTokens: '',
