@@ -281,10 +281,10 @@ export class App {
 
             if (newChatFlow) {
                 Object.assign(newChatFlow, body)
-                await this.AppDataSource.getRepository(ChatFlow).save(newChatFlow);
+                newChatFlow = await this.AppDataSource.getRepository(ChatFlow).save(newChatFlow);
                 
                 return res.json({
-                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+                    url: `https://pre-devtool-admin.dingtalk.com/p/${newChatFlow.id}`
                 })
             } else {
                 newChatFlow = new ChatFlow()
