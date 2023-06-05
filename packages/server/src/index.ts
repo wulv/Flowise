@@ -275,15 +275,29 @@ export class App {
                 outgoingRobot: []
             }
 
-            const newChatFlow = new ChatFlow()
-            Object.assign(newChatFlow, body)
-
-            const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
-            const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
-
-            return res.json({
-                url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+            let newChatFlow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
+                name: body.name
             })
+
+            if (newChatFlow) {
+                Object.assign(newChatFlow, body)
+                await this.AppDataSource.getRepository(ChatFlow).save(newChatFlow);
+                
+                return res.json({
+                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+                })
+            } else {
+                newChatFlow = new ChatFlow()
+                Object.assign(newChatFlow, body)
+
+                const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
+                const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
+
+                return res.json({
+                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+                })
+            }
+
         })
 
         // Save outgoingrobot info
