@@ -278,29 +278,15 @@ export class App {
                 outgoingRobot: []
             }
 
-            let newChatFlow = await this.AppDataSource.getRepository(ChatFlow).findOneBy({
-                name: body.name
+            const newChatFlow = new ChatFlow()
+            Object.assign(newChatFlow, body)
+
+            const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
+            const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
+
+            return res.json({
+                url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
             })
-
-            if (newChatFlow) {
-                Object.assign(newChatFlow, body)
-                newChatFlow = await this.AppDataSource.getRepository(ChatFlow).save(newChatFlow);
-                
-                return res.json({
-                    url: `https://pre-devtool-admin.dingtalk.com/p/${newChatFlow.id}`
-                })
-            } else {
-                newChatFlow = new ChatFlow()
-                Object.assign(newChatFlow, body)
-
-                const chatflow = this.AppDataSource.getRepository(ChatFlow).create(newChatFlow)
-                const results = await this.AppDataSource.getRepository(ChatFlow).save(chatflow)
-
-                return res.json({
-                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
-                })
-            }
-
         })
 
         // Save outgoingrobot info
