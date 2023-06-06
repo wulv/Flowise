@@ -42,6 +42,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 input: string
                 cardId?: string
+                returnDirect: boolean
             
                 constructor(fields: any) {
                     super()
