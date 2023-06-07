@@ -55,6 +55,14 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: any) {
                   console.log(input, 'JSAPI======input======')
+                  return JSON.stringify({
+                      type: 'card',
+                      cardId: '846e8cd9-6aa9-4bf3-a139-e5b5625ca841.schema',
+                      cardData: {
+                        pluginName: '测试',
+                        params: '{"a":123}'
+                      }
+                  })
                   return JSON.stringify(input)
                     // if (script_url && this.cardId) {
                     //     const inputs = input.split('|')
