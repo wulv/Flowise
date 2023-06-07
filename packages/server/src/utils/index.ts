@@ -20,6 +20,7 @@ import { scryptSync, randomBytes, timingSafeEqual } from 'crypto'
 import { buildTool as BuildRPATool } from './RPA';
 import { buildTool as buildAppTool } from './App';
 import { buildTool as buildOpenAPITool } from './OpenAPI';
+import { buildTool as buildJSAPITool } from './JSAPI';
 
 const QUESTION_VAR_PREFIX = 'question'
 
@@ -219,6 +220,8 @@ export const buildLangchain = async (
                     newNodeInstance = buildAppTool(manifest)
                 } else if (+manifest.type === 2) {
                     newNodeInstance = buildOpenAPITool(manifest)
+                } else if (+manifest.type === 3) {
+                    newNodeInstance = buildJSAPITool(manifest)
                 }
                 // flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNode.data, question)
             } else {
