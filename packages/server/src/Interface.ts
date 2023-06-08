@@ -88,6 +88,7 @@ interface Apiforframework {
 
 interface Apiformodel {
   input_param: Inputparam;
+  demo_for_AIs: string;
 }
 
 interface Inputparam {

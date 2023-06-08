@@ -2,6 +2,21 @@ import { INode, INodeData } from "flowise-components"
 import { IManifest } from "../Interface"
 import { Tool } from 'langchain/tools'
 
+// 拼接参数到描述
+// const buildDescriptionFromInputParam = (description: string, properties: any[]) => {
+
+//     Object.keys(properties).forEach((key) => {
+//         // @ts-ignore
+//         const property = properties[key]
+//         if (property.type === 'object') {
+//           buildDescriptionFromInputParam(description, property)
+//         } else {
+
+//           description += `\n${property.description}(${property.type})`
+//         }
+//     })
+// }
+
 export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
     const properties = manifest?.api_for_model?.input_param?.properties
@@ -43,7 +58,9 @@ export const buildTool = (manifest: IManifest) => {
             
                 constructor(fields: any) {
                     super()
-                    this.description =  manifest.description_for_model
+                    const demo = `API 调用示例代码为：` + manifest.api_for_model.demo_for_AIs
+                    const param = `API 调用参数信息为：` + JSON.stringify(manifest.api_for_model.input_param)
+                    this.description =  manifest.description_for_model + '\n ' + demo + '\n ' + param
                     this.name = name
                     if (fields?.cardId) {
                         this.cardId = fields.cardId
@@ -54,7 +71,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: any) {
-                  console.log(input, 'JSAPI======input======')
+                  console.log(input, this.description, 'JSAPI======input======')
                   return JSON.stringify({
                       type: 'card',
                       cardId: '846e8cd9-6aa9-4bf3-a139-e5b5625ca841.schema',
