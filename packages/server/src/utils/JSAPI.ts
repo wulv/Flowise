@@ -64,11 +64,11 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     // const param = `API 调用参数信息为：` + buildDescriptionFromInputParam('', manifest.api_for_model?.input_param?.properties)
                     // const param = `API 调用参数信息为：` + JSON.stringify(manifest.api_for_model?.input_param)
-                    const param = `API 调用参数信息为：text 表示钉消息内容, users 表示钉消息接收人, users 为字符串数组, 例如 ["小明"], 输出结果为json格式, 例如'''{"text":"消息内容","users": ['小明']}'''`
-                    const input = `input 需要从 user's input 分析。`
+                    // const param = `API 调用参数信息为：text 表示钉消息内容, users 表示钉消息接收人, users 为字符串数组, 例如 ["小明"], 输出结果为json格式, 例如'''{"text":"消息内容","users": ['小明']}'''`
+                    const input = `input 需要从 user's input 分析。格式是用 | 符号组合以下两组内容："需要发送钉消息给哪些用户姓名，中文，多个用,分割" "需要发送的钉消息内容，字符串"`
                     // console.log('==========', demo)
-                    console.log('==========', param)
-                    this.description =  manifest.description_for_model + input + param
+                    // console.log('==========', param)
+                    this.description =  manifest.description_for_model + input
                     this.name = name
                     if (fields?.cardId) {
                         this.cardId = fields.cardId
