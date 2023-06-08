@@ -60,8 +60,8 @@ export const buildTool = (manifest: IManifest) => {
                         return fields.cardId
                     }
 
-                    if (manifest?.api_for_model?.input_param?.properties?.card_id) {
-                        return manifest?.api_for_model?.input_param?.properties?.card_id?.sample
+                    if (manifest?.api_for_model?.input_param?.properties?.cardId) {
+                        return manifest?.api_for_model?.input_param?.properties?.cardId?.sample
                     }
                 }
             
@@ -96,9 +96,9 @@ export const buildTool = (manifest: IManifest) => {
                                 return '正在执行中...'
                             }
                             return JSON.stringify(response);
-                        } catch (error) {
+                        } catch (error: any) {
                             console.log(error)
-                            return error
+                            return error?.message || 'RPC脚本执行异常';
                         }
                     }
              
