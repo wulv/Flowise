@@ -63,7 +63,8 @@ export const buildTool = (manifest: IManifest) => {
                     // const demo = `API 调用示例代码为：` + manifest.api_for_model.demo_for_AIs
                     // @ts-ignore
                     // const param = `API 调用参数信息为：` + buildDescriptionFromInputParam('', manifest.api_for_model?.input_param?.properties)
-                    const param = `API 调用参数信息为：` + JSON.stringify(manifest.api_for_model?.input_param)
+                    // const param = `API 调用参数信息为：` + JSON.stringify(manifest.api_for_model?.input_param)
+                    const param = `API 调用参数信息为：text 表示钉消息内容, users 表示钉消息接收人, users 为字符串数组, 例如 ["大其"], 输出结果为json格式, 例如'''{"text":"定消息内容","users": ['大其']}'''，请从用户输入中解析参数`
 
                     // console.log('==========', demo)
                     console.log('==========', param)
@@ -78,7 +79,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: any) {
-                  console.log(input, this.description, 'JSAPI======input======')
+                  console.log(input, 'JSAPI======input======')
                   return JSON.stringify({
                       type: 'card',
                       cardId: '846e8cd9-6aa9-4bf3-a139-e5b5625ca841.schema',
