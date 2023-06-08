@@ -96,9 +96,9 @@ export const buildTool = (manifest: IManifest) => {
                                 return '正在执行中...'
                             }
                             return JSON.stringify(response);
-                        } catch (error) {
+                        } catch (error: any) {
                             console.log(error)
-                            return error
+                            return error?.message || 'RPC脚本执行异常';
                         }
                     }
              
