@@ -75,7 +75,6 @@ export class App {
                 // Initialize API keys
                 await getAPIKeys()
                 console.info('📦[server]: Data Source has been initialized!')
-
             })
             .catch((err) => {
                 console.error('❌[server]: Error during Data Source initialization:', err)
@@ -121,7 +120,7 @@ export class App {
             const returnData = nodes.map((item) => ({
                 ...item,
                 inputs: JSON.parse(item.inputs),
-                outputs: item.outputs ? JSON.parse(item.outputs): undefined,
+                outputs: item.outputs ? JSON.parse(item.outputs) : undefined,
                 baseClasses: JSON.parse(item.baseClasses)
             }))
             return res.json(returnData)
@@ -187,7 +186,7 @@ export class App {
         // Get all chatflows
         this.app.get('/api/v1/chatflows', async (req: Request, res: Response) => {
             const chatflows: IChatFlow[] = await this.AppDataSource.getRepository(ChatFlow).find()
-            return res.json(chatflows.map(i => ({ ...i, flowData: '[]'})))
+            return res.json(chatflows.map((i) => ({ ...i, flowData: '[]' })))
         })
 
         // Get specific chatflow via id
@@ -273,7 +272,7 @@ export class App {
                     manifest: any
                 }
 
-                console.log(toolMeta);
+                console.log(toolMeta)
 
                 // TODO，接收一个插件，构建一个chatflow，存储起来，返回预期预览的连接。
                 const body = {
@@ -301,8 +300,8 @@ export class App {
                 console.log(error?.message)
                 console.log(error)
                 return res.json({
-                    url: '',
-                });
+                    url: ''
+                })
             }
         })
 
@@ -350,6 +349,33 @@ export class App {
                 isStreaming: isFlowValidForStream(nodes, endingNodeData)
             }
             return res.json(obj)
+        })
+
+        // 跨域请求
+        this.app.get('/api/v1/jsonp/sendCard', (req, res) => {
+            const cardId = req.query.cardId as string
+            const cardData = req.query.cardData
+            const chatFlowId = req.query.chatFlowId as string
+            const robotCode = req.query.robotCode as string
+            const conversationId = req.query.conversationId as string
+            sendCard(
+                {
+                    cardId,
+                    cardData
+                },
+                { conversationType: '2', conversationId, robotCode },
+                chatFlowId,
+                robotCode
+            );
+            res.send('ok');
+
+            // const data = {
+            //   name: 'John',
+            //   age: 30
+            // };
+            // const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`;
+            // res.setHeader('Content-Type', 'application/javascript');
+            // res.send(jsonpData);
         })
 
         // ----------------------------------------
@@ -602,7 +628,7 @@ export class App {
             } catch (error) {
                 console.log(error)
             }
-            this.cacheMap.set(data.conversationId, false);
+            this.cacheMap.set(data.conversationId, false)
             return res.json({ code: 0 })
         })
 
@@ -970,7 +996,7 @@ export class App {
                     nodeInstanceFilePath = path.join(dir, `${nodeToExecuteData.name}.js`)
                 }
                 // const nodeInstanceFilePath = this.nodesPool.componentNodes[nodeToExecuteData.name].filePath as string
-               
+
                 const nodeModule = await import(nodeInstanceFilePath)
                 const nodeInstance = new nodeModule.nodeClass()
 
@@ -985,7 +1011,7 @@ export class App {
                 return res.json(result)
             }
         } catch (e: any) {
-            console.log(444,e)
+            console.log(444, e)
             return res.status(500).send(e.message)
         }
     }

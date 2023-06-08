@@ -142,6 +142,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
     const robot = JSON.parse(chatflow.robot)
     const accessToken = await getAccessToken(robot.robotAppKey, robot.robotAppSecret)
     if (data.conversationType === '2') {
+        // 群消息
         const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
@@ -153,6 +154,11 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 // callbackUrl: 'String',
                 cardData: JSON.stringify({
                     ...msg.cardData,
+                   robotData: {
+                    openConversationId: data.conversationId,
+                    robotCode: robotCode,
+                    chatFlowId,
+                   }
                 }),
                 // userIdPrivateDataMap: 'String',
                 // unionIdPrivateDataMap: 'String',
@@ -169,6 +175,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
         })
     return res
     } else if (data.conversationType === '1') {
+        // 单聊消息
         const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
