@@ -48,13 +48,21 @@ export const buildTool = (manifest: IManifest) => {
                     super()
                     this.description =  manifest.description_for_model
                     this.name = name
-                    if (fields?.cardId) {
-                        this.cardId = fields.cardId
-                    }
+                    this.cardId = this._getCardId(fields, manifest);
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
             
+                }
+
+                _getCardId(fields: any, manifest: any) {
+                    if (fields?.cardId) {
+                        return fields.cardId
+                    }
+
+                    if (manifest?.api_for_model?.input_param?.properties?.card_id) {
+                        return manifest?.api_for_model?.input_param?.properties?.card_id?.sample
+                    }
                 }
             
                 /** @ignore */
