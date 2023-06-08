@@ -352,7 +352,7 @@ export class App {
         })
 
         // 跨域请求
-        this.app.get('/api/v1/jsonp/sendCard', (req, res) => {
+        this.app.get('/api/v1/jsonp/sendCard.js', (req, res) => {
             const robotData = decodeURIComponent(req.query.robotData as string)
             const { cardId, cardData, chatFlowId, robotCode, conversationId } = JSON.parse(robotData)
 
@@ -365,15 +365,13 @@ export class App {
                 chatFlowId,
                 robotCode
             )
-            res.send('ok')
 
-            // const data = {
-            //   name: 'John',
-            //   age: 30
-            // };
-            // const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`;
-            // res.setHeader('Content-Type', 'application/javascript');
-            // res.send(jsonpData);
+            const data = {
+              data: 'ok',
+            };
+            const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`;
+            res.setHeader('Content-Type', 'application/javascript');
+            res.send(jsonpData);
         })
 
         // ----------------------------------------
