@@ -62,7 +62,8 @@ export const buildTool = (manifest: IManifest) => {
                     super()
                     // const demo = `API 调用示例代码为：` + manifest.api_for_model.demo_for_AIs
                     // @ts-ignore
-                    const param = `API 调用参数信息为：` + buildDescriptionFromInputParam('', manifest.api_for_model?.input_param?.properties)
+                    // const param = `API 调用参数信息为：` + buildDescriptionFromInputParam('', manifest.api_for_model?.input_param?.properties)
+                    const param = `API 调用参数信息为：` + JSON.stringify(manifest.api_for_model?.input_param)
 
                     // console.log('==========', demo)
                     console.log('==========', param)
