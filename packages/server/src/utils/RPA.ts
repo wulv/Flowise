@@ -60,8 +60,8 @@ export const buildTool = (manifest: IManifest) => {
                         return fields.cardId
                     }
 
-                    if (manifest?.api_for_model?.input_param?.properties?.card_id) {
-                        return manifest?.api_for_model?.input_param?.properties?.card_id?.sample
+                    if (manifest?.api_for_model?.input_param?.properties?.cardId) {
+                        return manifest?.api_for_model?.input_param?.properties?.cardId?.sample
                     }
                 }
             
