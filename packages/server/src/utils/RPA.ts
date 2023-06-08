@@ -60,6 +60,7 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     if (script_url && this.cardId) {
+                        // 场景1,cdn方式
                         const inputs = input.split('|')
                         return JSON.stringify(
                             {
@@ -72,23 +73,27 @@ export const buildTool = (manifest: IManifest) => {
                             }
                         )
                     }
-                    try {
-                        const headers = { "Content-Type": "application/json" };
-                        const body = JSON.stringify({ input: input });
-                        // @ts-ignore
-                        const response = await fetch(this.webhook, {
-                            method: 'POST',
-                            headers,
-                            body,
-                        }).then((res: any) => res.json());
-                        if (response.result === true) {
-                            return '正在执行中...'
+                    // 场景2,webhook方式
+                    if (this.webhook) {
+                        try {
+                            const headers = { "Content-Type": "application/json" };
+                            const body = JSON.stringify({ input: input });
+                            // @ts-ignore
+                            const response = await fetch(this.webhook, {
+                                method: 'POST',
+                                headers,
+                                body,
+                            }).then((res: any) => res.json());
+                            if (response.result === true) {
+                                return '正在执行中...'
+                            }
+                            return JSON.stringify(response);
+                        } catch (error) {
+                            console.log(error)
+                            return error
                         }
-                        return JSON.stringify(response);
-                    } catch (error) {
-                        console.log(error)
-                        return '111'
                     }
+             
                 }
             }
             const tool = new RPATool({
