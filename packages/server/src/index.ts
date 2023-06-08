@@ -353,15 +353,15 @@ export class App {
 
         // 跨域请求
         this.app.get('/api/v1/jsonp/sendCard', (req, res) => {
-            const cardId = req.query.cardId as string
-            const cardData = req.query.cardData
-            const chatFlowId = req.query.chatFlowId as string
-            const robotCode = req.query.robotCode as string
-            const conversationId = req.query.conversationId as string
+            const cardId = decodeURIComponent(req.query.cardId as string)
+            const cardData = decodeURIComponent(req.query.cardData as string)
+            const chatFlowId = decodeURIComponent(req.query.chatFlowId as string)
+            const robotCode = decodeURIComponent(req.query.robotCode as string)
+            const conversationId = decodeURIComponent(req.query.conversationId as string)
             sendCard(
                 {
                     cardId,
-                    cardData
+                    cardData: JSON.parse(cardData)
                 },
                 { conversationType: '2', conversationId, robotCode },
                 chatFlowId,
