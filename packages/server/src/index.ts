@@ -397,7 +397,7 @@ export class App {
                 [new HumanChatMessage(`你当前处在一个app中，${question}。你需要设计一个在app中的操作步骤计划，这个计划是什么，请一步一步推演`)],
                 undefined,
               );
-              res.json(responseA)
+              return res.json(responseA)
         })
 
         // 接收一个html，和一个意图，返回一个元素选择器
@@ -430,7 +430,7 @@ export class App {
                 ],
                 undefined,
               );
-            res.json(responseA)
+              return res.json(responseA)
 
         })
 
