@@ -6,6 +6,9 @@ import http from 'http'
 import * as fs from 'fs'
 import basicAuth from 'express-basic-auth'
 import { Server } from 'socket.io'
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { HumanChatMessage, SystemChatMessage } from 'langchain/schema';
+import * as cheerio from "cheerio";
 
 import {
     IChatFlow,
@@ -374,6 +377,61 @@ export class App {
             const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`;
             res.setHeader('Content-Type', 'application/javascript');
             res.send(jsonpData);
+        })
+
+        // 获取一个事件的所有流程
+        this.app.get('/api/v1/chat', async (req: Request, res: Response) => {
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_KEY = req.query.apiKey as string
+            const question = req.query.question as string
+            const chat = new ChatOpenAI(
+                {
+                  modelName: 'gpt-3.5-turbo',
+                  openAIApiKey: OPENAI_API_KEY,
+                  verbose: true,
+                  streaming: true,
+                },
+                { basePath: OPENAI_API_BASE }
+              );
+              const responseA = await chat.call(
+                [new HumanChatMessage(`你当前处在一个app中，${question}。你需要设计一个在app中的操作步骤计划，这个计划是什么，请一步一步推演`)],
+                undefined,
+              );
+              res.json(responseA)
+        })
+
+        // 接收一个html，和一个意图，返回一个元素选择器
+        this.app.post('/api/v1/html', async (req: Request, res: Response) => {
+            const html = req.body.html as string
+            const intent = req.body.intent as string
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_KEY = req.body.apiKey as string
+            const $ = cheerio.load(html, { scriptingEnabled: true });
+            $('script').remove();
+            $('style').remove();
+            $('svg').remove();
+            const html1 = $.html();
+            const cleanHtml = html1.replace(/<[^>]+>/g, '').replace(/styles*=s*['"]?([^'"]*)['"]?/gi, '');
+            
+            // chatgpt询问，返回一个元素选择器
+            const chat = new ChatOpenAI(
+                {
+                  modelName: 'gpt-3.5-turbo',
+                  openAIApiKey: OPENAI_API_KEY,
+                  verbose: true,
+                  streaming: true,
+                },
+                { basePath: OPENAI_API_BASE }
+              );
+              const responseA = await chat.call(
+                [
+                    // new SystemChatMessage(``),
+                    new HumanChatMessage(`这是html结构：${cleanHtml}，我想${intent}，需要点击哪个元素，返回一个元素选择器`),
+                ],
+                undefined,
+              );
+            res.json(responseA)
+
         })
 
         // ----------------------------------------

@@ -170,7 +170,8 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 }
             }
         )
-        .catch(() => {
+        .catch((e) => {
+            console.log(e)
             tokenMap[robot.robotAppKey] = ''
         })
     return res
