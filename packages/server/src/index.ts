@@ -400,6 +400,26 @@ export class App {
               return res.json(responseA)
         })
 
+        this.app.get('/api/v1/chatopenai', async (req: Request, res: Response) => {
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_KEY = req.query.apiKey as string
+            const question = req.query.question as string
+            const chat = new ChatOpenAI(
+                {
+                  modelName: 'gpt-3.5-turbo',
+                  openAIApiKey: OPENAI_API_KEY,
+                  verbose: true,
+                  streaming: true,
+                },
+                { basePath: OPENAI_API_BASE }
+              );
+              const responseA = await chat.call(
+                [new HumanChatMessage(question)],
+                undefined,
+              );
+              return res.json(responseA)
+        })
+
         // 接收一个html，和一个意图，返回一个元素选择器
         this.app.post('/api/v1/html', async (req: Request, res: Response) => {
             const html = req.body.html as string
