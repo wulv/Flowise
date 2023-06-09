@@ -400,10 +400,10 @@ export class App {
               return res.json(responseA)
         })
 
-        this.app.get('/api/v1/chatopenai', async (req: Request, res: Response) => {
+        this.app.post('/api/v1/chatopenai', async (req: Request, res: Response) => {
             const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
-            const OPENAI_API_KEY = req.query.apiKey as string
-            const question = req.query.question as string
+            const OPENAI_API_KEY = req.body.apiKey as string
+            const question = req.body.question as string
             const chat = new ChatOpenAI(
                 {
                   modelName: 'gpt-3.5-turbo',
