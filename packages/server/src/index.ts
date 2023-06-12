@@ -297,7 +297,7 @@ export class App {
                 console.log('results.id', Date.now() - ts, results.id)
 
                 return res.json({
-                    url: `https://pre-devtool-admin.dingtalk.com/p/${results.id}`
+                    url: `https://flowise-proxy.pre-fc.alibaba-inc.com/p/${results.id}`
                 })
             } catch (error: any) {
                 console.log(error?.message)
