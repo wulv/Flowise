@@ -43,10 +43,12 @@ export const buildTool = (manifest: IManifest) => {
                 input: string
                 cardId?: string
                 returnDirect: boolean
+                url: string
             
                 constructor(fields: any) {
                     super()
                     this.description =  manifest.description_for_model
+                    this.url =  manifest.api_for_framework?.url
                     this.name = name
                     this.cardId = this._getCardId(fields, manifest);
                     // @ts-ignore
@@ -76,6 +78,7 @@ export const buildTool = (manifest: IManifest) => {
                                 cardId: this.cardId,
                                 cardData: {
                                     script_url: `${script_url}`,
+                                    app_url: this.url,
                                     inputs: inputs
                                 }
                             }
