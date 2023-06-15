@@ -42,6 +42,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 input: string
                 cardId?: string
+                cardJson?: any
                 returnDirect: boolean
                 url: string
             
@@ -51,6 +52,9 @@ export const buildTool = (manifest: IManifest) => {
                     this.url =  manifest.api_for_framework?.url
                     this.name = name
                     this.cardId = this._getCardId(fields, manifest);
+                    if (fields?.cardJson) {
+                        this.cardJson = fields.cardJson
+                    }
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
@@ -69,6 +73,18 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
+                    if (script_url && this.cardJson) {
+                        return JSON.stringify(
+                            {
+                                type: 'card',
+                                cardId: 'StandardCard',
+                                cardData: {
+                                    script_url: `${script_url}`,
+                                    cardJson: this.cardJson
+                                }
+                            }
+                        )
+                    }
                     if (script_url && this.cardId) {
                         // 场景1,cdn方式
                         const inputs = input.split('|')
