@@ -6,9 +6,12 @@ import http from 'http'
 import * as fs from 'fs'
 import basicAuth from 'express-basic-auth'
 import { Server } from 'socket.io'
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { HumanChatMessage, SystemChatMessage } from 'langchain/schema';
-import * as cheerio from "cheerio";
+import { ChatOpenAI } from 'langchain/chat_models/openai'
+import { HumanChatMessage } from 'langchain/schema'
+import * as cheerio from 'cheerio'
+import { StructuredOutputParser } from 'langchain/output_parsers'
+import { PromptTemplate } from "langchain/prompts";
+import { LLMChain } from "langchain/chains";
 
 import {
     IChatFlow,
@@ -358,9 +361,9 @@ export class App {
         this.app.get('/api/v1/jsonp/sendCard.js', (req, res) => {
             const robotData = decodeURIComponent(req.query.robotData as string)
             const result = JSON.parse(robotData)
-            console.log('res', result);
-            
-            const { cardId, cardData, chatFlowId, robotCode, conversationId } = result;
+            console.log('res', result)
+
+            const { cardId, cardData, chatFlowId, robotCode, conversationId } = result
             sendCard(
                 {
                     cardId,
@@ -372,86 +375,135 @@ export class App {
             )
 
             const data = {
-              data: 'ok',
-            };
-            const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`;
-            res.setHeader('Content-Type', 'application/javascript');
-            res.send(jsonpData);
+                data: 'ok'
+            }
+            const jsonpData = `${req.query.callback}(${JSON.stringify(data)})`
+            res.setHeader('Content-Type', 'application/javascript')
+            res.send(jsonpData)
         })
 
         // 获取一个事件的所有流程
         this.app.get('/api/v1/chat', async (req: Request, res: Response) => {
-            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
             const OPENAI_API_KEY = req.query.apiKey as string
             const question = req.query.question as string
             const chat = new ChatOpenAI(
                 {
-                  modelName: 'gpt-3.5-turbo',
-                  openAIApiKey: OPENAI_API_KEY,
-                  verbose: true,
-                  streaming: true,
+                    modelName: 'gpt-3.5-turbo',
+                    openAIApiKey: OPENAI_API_KEY,
+                    verbose: true,
+                    streaming: true
                 },
                 { basePath: OPENAI_API_BASE }
-              );
-              const responseA = await chat.call(
-                [new HumanChatMessage(`你当前处在一个app中，${question}。你需要设计一个在app中的操作步骤计划，这个计划是什么，请一步一步推演`)],
-                undefined,
-              );
-              return res.json(responseA)
+            )
+            const responseA = await chat.call(
+                [
+                    new HumanChatMessage(
+                        `你当前处在一个app中，${question}。你需要设计一个在app中的操作步骤计划，这个计划是什么，请一步一步推演`
+                    )
+                ],
+                undefined
+            )
+            return res.json(responseA)
         })
 
         this.app.post('/api/v1/chatopenai', async (req: Request, res: Response) => {
-            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
             const OPENAI_API_KEY = req.body.apiKey as string
             const question = req.body.question as string
             const chat = new ChatOpenAI(
                 {
-                  modelName: 'gpt-3.5-turbo',
-                  openAIApiKey: OPENAI_API_KEY,
-                  verbose: true,
-                  streaming: true,
+                    modelName: 'gpt-3.5-turbo',
+                    openAIApiKey: OPENAI_API_KEY,
+                    verbose: true,
+                    streaming: true
                 },
                 { basePath: OPENAI_API_BASE }
-              );
-              const responseA = await chat.call(
-                [new HumanChatMessage(question)],
-                undefined,
-              );
-              return res.json(responseA)
+            )
+            const responseA = await chat.call([new HumanChatMessage(question)], undefined)
+            return res.json(responseA)
         })
 
         // 接收一个html，和一个意图，返回一个元素选择器
         this.app.post('/api/v1/html', async (req: Request, res: Response) => {
             const html = req.body.html as string
             const intent = req.body.intent as string
-            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1';
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
             const OPENAI_API_KEY = req.body.apiKey as string
-            const $ = cheerio.load(html, { scriptingEnabled: true });
-            $('script').remove();
-            $('style').remove();
-            $('svg').remove();
-            const html1 = $.html();
-            const cleanHtml = html1.replace(/<[^>]+>/g, '').replace(/styles*=s*['"]?([^'"]*)['"]?/gi, '');
-            
+            const $ = cheerio.load(html, { scriptingEnabled: true })
+            $('script').remove()
+            $('style').remove()
+            $('svg').remove()
+            const html1 = $.html()
+            const cleanHtml = html1.replace(/<[^>]+>/g, '').replace(/styles*=s*['"]?([^'"]*)['"]?/gi, '')
+
             // chatgpt询问，返回一个元素选择器
             const chat = new ChatOpenAI(
                 {
-                  modelName: 'gpt-3.5-turbo',
-                  openAIApiKey: OPENAI_API_KEY,
-                  verbose: true,
-                  streaming: true,
+                    modelName: 'gpt-3.5-turbo',
+                    openAIApiKey: OPENAI_API_KEY,
+                    verbose: true,
+                    streaming: true
                 },
                 { basePath: OPENAI_API_BASE }
-              );
-              const responseA = await chat.call(
+            )
+            const responseA = await chat.call(
                 [
                     // new SystemChatMessage(``),
-                    new HumanChatMessage(`这是html结构：${cleanHtml}，我想${intent}，需要点击哪个元素，返回一个元素选择器`),
+                    new HumanChatMessage(`这是html结构：${cleanHtml}，我想${intent}，需要点击哪个元素，返回一个元素选择器`)
                 ],
-                undefined,
-              );
-              return res.json(responseA)
+                undefined
+            )
+            return res.json(responseA)
+        })
 
+        // askForNextStep
+        this.app.post('/api/v1/askForNextStep', async (req: Request, res: Response) => {
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
+            const OPENAI_API_KEY = req.body.apiKey as string
+            const goal = req.body.goal as string
+            const historyStep = req.body.historyStep as string[] || []
+            const dom = req.body.dom as string
+            const chat = new ChatOpenAI(
+                {
+                    modelName: 'gpt-3.5-turbo-16k',
+                    openAIApiKey: OPENAI_API_KEY,
+                    verbose: true,
+                    streaming: true
+                },
+                { basePath: OPENAI_API_BASE }
+            )
+            const parser = StructuredOutputParser.fromNamesAndDescriptions({
+                action: '下一步可执行的动作，"click"、"input"、"目标已完成"',
+                selector: '选择器，如".btn"、"#id"、"input[name=xxx]"',
+                desc: 'description of the current action，当前动作的描述'
+            })
+            const formatInstructions = parser.getFormatInstructions()
+            // 询问llm，根据当前html和用户意图，接下来要做什么动作
+            const prompt = new PromptTemplate({
+                template: `You are an agent controlling a browser.
+          当前页面的html结构如下：{html}；
+          用户的意图是：{question}；
+          你已经完成了这些动作：{historyStep}；
+          接下来需要怎么做才能靠近最终意图，每次只执行一个动作，请返回一段js代码，{format_instructions}`,
+                inputVariables: ['question', 'html', 'historyStep'],
+                partialVariables: { format_instructions: formatInstructions }
+            })
+
+            const chain = new LLMChain({
+                verbose: true,
+                llm: chat,
+                outputParser: parser,
+                prompt
+            })
+            const result = await chain.call({
+                question: goal,
+                html: dom || '',
+                historyStep: historyStep.join(',')
+            })
+            // chatgpt询问，返回一个元素选择器
+       
+            return  res.json(result.text);
         })
 
         // ----------------------------------------
