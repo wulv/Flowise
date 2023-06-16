@@ -474,8 +474,9 @@ export class App {
                 { basePath: OPENAI_API_BASE }
             )
             const parser = StructuredOutputParser.fromNamesAndDescriptions({
-                action: '下一步可执行的动作，"click"、"input"、"目标已完成"',
-                selector: '选择器，如".btn"、"#id"、"input[name=xxx]"',
+                action: '下一步可执行的动作，"click"、"input"、"finish"、"humanAssist"',
+                selector: 'css选择器，如".btn"、"#id"、"input[name=xxx]"',
+                inputValue: 'if_you_need_type_value',
                 desc: 'description of the current action，当前动作的描述'
             })
             const formatInstructions = parser.getFormatInstructions()
