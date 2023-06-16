@@ -71,7 +71,7 @@ export const buildTool = (manifest: IManifest) => {
 
                 _getCardJson(fields: any,manifest: any) {
                     if (manifest?.api_for_framework?.card_json) {
-                        return { ...manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}' }
+                        return manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
                     }
                 }
             
