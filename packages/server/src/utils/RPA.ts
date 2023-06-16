@@ -70,7 +70,6 @@ export const buildTool = (manifest: IManifest) => {
                 }
 
                 _getCardJson(fields: any,manifest: any) {
-                    console.log('input--------------manifest', Object.keys(manifest.api_for_framework))
                     if (manifest?.api_for_framework?.card_json) {
                         return { ...manifest?.api_for_framework?.card_json?.jsons?.[0] || {} }
                     }
@@ -78,17 +77,18 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log('input--------------111111', input, this.cardJson)
+                    console.log('input--------------111111', input, this.cardJson.length)
                     if (script_url && this.cardJson) {
                         // 把 input 拼接到 cardJson 中的 link 字段中
-                        this.cardJson.contents[this.cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
-                        console.log('input--------------222222', this.cardJson)
+                        const cardJson = JSON.parse(this.cardJson)
+                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
+                        console.log('input--------------222222', cardJson.length)
                         return JSON.stringify(
                             {
                                 type: 'card',
                                 cardId: 'StandardCard',
                                 cardData: {
-                                    cardJson: this.cardJson
+                                    cardJson
                                 }
                             }
                         )
