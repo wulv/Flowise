@@ -77,7 +77,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log('input--------------111111', input, typeof this.cardJson)
+                    console.log('input--------------111111', input, Object.keys(this.cardJson))
                     if (script_url && this.cardJson) {
                         // 把 input 拼接到 cardJson 中的 link 字段中
                         const cardJson = JSON.parse(this.cardJson)
