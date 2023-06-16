@@ -1,6 +1,7 @@
 import { INode, INodeData } from "flowise-components"
 import { IManifest } from "../Interface"
 import { Tool } from 'langchain/tools'
+import mustache from 'mustache'
 
 export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
@@ -78,10 +79,15 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     if (script_url && this.cardJson) {
-                        // 把 input 拼接到 cardJson 中的 link 字段中
-                        const cardJson = JSON.parse(this.cardJson)
-                        const inputs = input.split('|')
-                        console.log('===========', cardJson.header.title.text)
+                        const inputs = JSON.parse(input)
+                        let templateString = ''
+                        try {
+                            templateString = mustache.render(this.cardJson, inputs || {}, {});
+                        } catch (error) {
+                            console.error('render error', error);
+                            return;
+                        }
+                        const cardJson = JSON.parse(templateString)
                         cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
                         return JSON.stringify(
                             {
