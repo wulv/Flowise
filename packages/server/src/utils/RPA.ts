@@ -80,8 +80,8 @@ export const buildTool = (manifest: IManifest) => {
                     if (script_url && this.cardJson) {
                         // 把 input 拼接到 cardJson 中的 link 字段中
                         const cardJson = JSON.parse(this.cardJson)
-                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
-                        console.log('input--------------222222', this.cardJson.length)
+                        console.log('===========', cardJson.header.title.text)
+                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(input)}`
                         return JSON.stringify(
                             {
                                 type: 'card',
