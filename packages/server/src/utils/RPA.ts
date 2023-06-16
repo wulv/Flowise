@@ -80,7 +80,7 @@ export const buildTool = (manifest: IManifest) => {
                 async _call(input: string) {
                     if (script_url && this.cardJson) {
                         const inputs = JSON.parse(input)
-                        Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
+                        Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
                         let templateString = ''
                         try {
 
