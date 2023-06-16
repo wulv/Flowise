@@ -52,9 +52,7 @@ export const buildTool = (manifest: IManifest) => {
                     this.url =  manifest.api_for_framework?.url
                     this.name = name
                     this.cardId = this._getCardId(fields, manifest);
-                    if (fields?.cardJson) {
-                        this.cardJson = fields.cardJson
-                    }
+                    this.cardJson = this._getCardJson(fields, manifest);
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
@@ -70,16 +68,26 @@ export const buildTool = (manifest: IManifest) => {
                         return manifest?.api_for_model?.input_param?.properties?.cardId?.sample
                     }
                 }
+
+                _getCardJson(fields: any,manifest: any) {
+                    console.log('input--------------manifest', manifest.api_for_framework)
+                    if (manifest?.api_for_framework?.cardJson) {
+                        return { ...manifest?.api_for_framework?.cardJson?.jsons?.[0] || {} }
+                    }
+                }
             
                 /** @ignore */
                 async _call(input: string) {
+                    console.log('input--------------111111', input, script_url, this.cardJson)
                     if (script_url && this.cardJson) {
+                        // 把 input 拼接到 cardJson 中的 link 字段中
+                        this.cardJson.contents[this.cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
+                        console.log('input--------------222222', this.cardJson)
                         return JSON.stringify(
                             {
                                 type: 'card',
                                 cardId: 'StandardCard',
                                 cardData: {
-                                    script_url: `${script_url}`,
                                     cardJson: this.cardJson
                                 }
                             }
