@@ -77,12 +77,11 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log('input--------------111111', input, Object.keys(this.cardJson))
                     if (script_url && this.cardJson) {
                         // 把 input 拼接到 cardJson 中的 link 字段中
                         const cardJson = JSON.parse(this.cardJson)
                         cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
-                        console.log('input--------------222222', cardJson.length)
+                        console.log('input--------------222222', this.cardJson.length)
                         return JSON.stringify(
                             {
                                 type: 'card',
