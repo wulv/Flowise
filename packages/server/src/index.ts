@@ -470,13 +470,12 @@ export class App {
                     modelName: 'gpt-3.5-turbo-16k',
                     openAIApiKey: OPENAI_API_KEY,
                     verbose: true,
-                    streaming: true
                 },
                 { basePath: OPENAI_API_BASE }
             )
             const parser = StructuredOutputParser.fromNamesAndDescriptions({
                 action: '下一步可执行的动作，"click"、"input"、"finish"、"humanAssist"',
-                selector: 'css选择器，如".btn"、"#id"、"input[name=xxx]"',
+                selector: 'css选择器，只能从给定的html结构提取，如".btn"、"#id"、"input[name=xxx]"',
                 inputValue: 'if_you_need_type_value',
                 desc: 'description of the current action，当前动作的描述'
             })
@@ -494,7 +493,6 @@ export class App {
             })
 
             const chain = new LLMChain({
-                verbose: true,
                 llm: chat,
                 outputParser: parser,
                 prompt
@@ -503,7 +501,7 @@ export class App {
                 question: goal,
                 html: dom || '',
                 title,
-                historyStep: historyStep.join(',')
+                historyStep: historyStep.join(',') || '暂无执行动作'
             })
             // chatgpt询问，返回一个元素选择器
        
