@@ -462,6 +462,7 @@ export class App {
             const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
             const OPENAI_API_KEY = req.body.apiKey as string
             const goal = req.body.goal as string
+            const title = req.body.title as string
             const historyStep = req.body.historyStep as string[] || []
             const dom = req.body.dom as string
             const chat = new ChatOpenAI(
@@ -483,11 +484,12 @@ export class App {
             // 询问llm，根据当前html和用户意图，接下来要做什么动作
             const prompt = new PromptTemplate({
                 template: `You are an agent controlling a browser.
+                当前页面的标题是：{title}；
           当前页面的html结构如下：{html}；
           用户的意图是：{question}；
           你已经完成了这些动作：{historyStep}；
-          接下来需要怎么做才能靠近最终意图，每次只执行一个动作，请返回一段js代码，{format_instructions}`,
-                inputVariables: ['question', 'html', 'historyStep'],
+          请推理接下来需要怎么做才能靠近最终意图，每次只执行一个动作，{format_instructions}`,
+                inputVariables: ['question', 'html', 'historyStep', 'title'],
                 partialVariables: { format_instructions: formatInstructions }
             })
 
@@ -500,6 +502,7 @@ export class App {
             const result = await chain.call({
                 question: goal,
                 html: dom || '',
+                title,
                 historyStep: historyStep.join(',')
             })
             // chatgpt询问，返回一个元素选择器
