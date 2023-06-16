@@ -80,6 +80,7 @@ export const buildTool = (manifest: IManifest) => {
                 async _call(input: string) {
                     if (script_url && this.cardJson) {
                         const inputs = JSON.parse(input)
+                        Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
                         let templateString = ''
                         try {
                             templateString = mustache.render(this.cardJson, inputs || {}, {});
@@ -87,8 +88,9 @@ export const buildTool = (manifest: IManifest) => {
                             console.error('render error', error);
                             return;
                         }
+                        console.error('render', templateString);
                         const cardJson = JSON.parse(templateString)
-                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
+                        // cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
                         return JSON.stringify(
                             {
                                 type: 'card',
