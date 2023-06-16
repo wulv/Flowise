@@ -94,6 +94,8 @@ export const buildTool = (manifest: IManifest) => {
                             return;
                         }
                         const cardJson = JSON.parse(templateString)
+                        console.error('==================', cardJson);
+
                         // cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
                         return JSON.stringify(
                             {
