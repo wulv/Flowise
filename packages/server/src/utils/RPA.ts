@@ -70,7 +70,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
 
                 _getCardJson(fields: any,manifest: any) {
-                    console.log('input--------------manifest', manifest.api_for_framework)
+                    console.log('input--------------manifest', Object.keys(manifest.api_for_framework))
                     if (manifest?.api_for_framework?.cardJson) {
                         return { ...manifest?.api_for_framework?.cardJson?.jsons?.[0] || {} }
                     }
@@ -78,7 +78,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log('input--------------111111', input, script_url, this.cardJson)
+                    console.log('input--------------111111', input, this.cardJson)
                     if (script_url && this.cardJson) {
                         // 把 input 拼接到 cardJson 中的 link 字段中
                         this.cardJson.contents[this.cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
