@@ -83,12 +83,16 @@ export const buildTool = (manifest: IManifest) => {
                         Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
                         let templateString = ''
                         try {
+
+                            console.error('==================');
+                            console.error('==================', this.cardJson, inputs);
+                            console.error('==================');
+
                             templateString = mustache.render(this.cardJson, inputs || {}, {});
                         } catch (error) {
                             console.error('render error', error);
                             return;
                         }
-                        console.error('render', templateString);
                         const cardJson = JSON.parse(templateString)
                         // cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
                         return JSON.stringify(
