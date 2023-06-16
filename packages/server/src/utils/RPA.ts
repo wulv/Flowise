@@ -86,6 +86,7 @@ export const buildTool = (manifest: IManifest) => {
                         return JSON.stringify(
                             {
                                 type: 'card',
+                                input,
                                 cardId: 'StandardCard',
                                 cardData: {
                                     cardJson
