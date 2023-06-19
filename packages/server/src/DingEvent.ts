@@ -184,6 +184,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 // callbackUrl: 'String',
                 cardData: JSON.stringify({
                     ...msg.cardData,
+                    cardId: data.conversationType,
                    robotData: {
                     openConversationId: data.conversationId,
                     robotCode: robotCode,
@@ -247,6 +248,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 // callbackUrl: 'String',
                 cardData: JSON.stringify({
                     ...msg.cardData,
+                    cardId: data.conversationType,
                     robotData: {
                         openConversationId: data.conversationId,
                         robotCode: robotCode,
