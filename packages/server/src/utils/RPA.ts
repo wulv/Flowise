@@ -1,6 +1,7 @@
 import { INode, INodeData } from "flowise-components"
 import { IManifest } from "../Interface"
 import { Tool } from 'langchain/tools'
+import mustache from 'mustache'
 
 export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
@@ -78,13 +79,28 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     if (script_url && this.cardJson) {
-                        // 把 input 拼接到 cardJson 中的 link 字段中
-                        const cardJson = JSON.parse(this.cardJson)
-                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/openLink?url=${encodeURIComponent(script_url)}&params=${encodeURIComponent(input)}`
-                        console.log('input--------------222222', this.cardJson.length)
+                        const inputs = JSON.parse(input)
+                        Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
+                        let templateString = ''
+                        try {
+
+                            console.log('==================');
+                            console.log('==================', this.cardJson, inputs);
+                            console.log('==================');
+
+                            templateString = mustache.render(this.cardJson, inputs || {}, {});
+                        } catch (error) {
+                            console.error('render error', error);
+                            return;
+                        }
+                        const cardJson = JSON.parse(templateString)
+                        console.log('==================', cardJson);
+
+                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
                         return JSON.stringify(
                             {
                                 type: 'card',
+                                input,
                                 cardId: 'StandardCard',
                                 cardData: {
                                     cardJson
