@@ -463,6 +463,7 @@ export class App {
             const OPENAI_API_KEY = req.body.apiKey as string
             const goal = req.body.goal as string
             const title = req.body.title as string
+            const isText = req.body.isText as boolean
             const historyStep = req.body.historyStep as string[] || []
             const dom = req.body.dom as string
             const chat = new ChatOpenAI(
@@ -475,14 +476,14 @@ export class App {
             )
             const parser = StructuredOutputParser.fromNamesAndDescriptions({
                 action: '下一步可执行的动作，"click"、"input"、"finish"、"humanAssist"',
-                selector: 'css选择器，只能从给定的html结构提取，如".btn"、"#id"、"input[name=xxx]"',
+                selector: isText ? '需要' : 'css选择器，只能从给定的html结构提取，如".btn"、"#id"、"input[name=xxx]"',
                 inputValue: 'if_you_need_type_value',
                 desc: 'description of the current action，当前动作的描述'
             })
             const formatInstructions = parser.getFormatInstructions()
             // 询问llm，根据当前html和用户意图，接下来要做什么动作
             const prompt = new PromptTemplate({
-                template: `You are an agent controlling a browser.
+                template: `你要根据每一次我提供的页面dom信息，返回特定的指令，使得当前打开页面更加接近总目标，最终完成我设定的目标
                 当前页面的标题是：{title}；
           当前页面的html结构如下：{html}；
           用户的意图是：{question}；
