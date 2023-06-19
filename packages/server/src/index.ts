@@ -363,13 +363,13 @@ export class App {
             const result = JSON.parse(robotData)
             console.log('res', result)
 
-            const { cardId, cardData, chatFlowId, robotCode, conversationId } = result
+            const { cardId, cardData, chatFlowId, robotCode, conversationId, conversationType } = result
             sendCard(
                 {
                     cardId,
                     cardData
                 },
-                { conversationType: '2', conversationId, robotCode },
+                { conversationType:conversationType || '2', conversationId, robotCode },
                 chatFlowId,
                 robotCode
             )

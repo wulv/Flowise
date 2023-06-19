@@ -187,6 +187,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                    robotData: {
                     openConversationId: data.conversationId,
                     robotCode: robotCode,
+                    conversationType: data.conversationType,
                     chatFlowId,
                    }
                 }),
@@ -249,6 +250,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                     robotData: {
                         openConversationId: data.conversationId,
                         robotCode: robotCode,
+                        conversationType: data.conversationType,
                         chatFlowId,
                        }
                 }),
