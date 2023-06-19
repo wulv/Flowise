@@ -78,41 +78,47 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    if (script_url && this.cardJson) {
-                        const inputs = JSON.parse(input)
-                        Object.assign(inputs, { url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}` })
-                        let templateString = ''
-                        try {
+                    try {
+                        if (script_url && this.cardJson) {
+                            const inputs = JSON.parse(input)
+                            Object.assign(inputs, {
+                                url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
+                                    script_url
+                                )}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
+                            })
+                            let templateString = ''
+                            try {
+                                console.log('==================')
+                                console.log('==================', this.cardJson, inputs)
+                                console.log('==================')
 
-                            console.log('==================');
-                            console.log('==================', this.cardJson, inputs);
-                            console.log('==================');
+                                templateString = mustache.render(this.cardJson, inputs || {}, {})
+                            } catch (error) {
+                                console.error('render error', error)
+                                return
+                            }
+                            const cardJson = JSON.parse(templateString)
+                            console.log('==================', cardJson)
 
-                            templateString = mustache.render(this.cardJson, inputs || {}, {});
-                        } catch (error) {
-                            console.error('render error', error);
-                            return;
-                        }
-                        const cardJson = JSON.parse(templateString)
-                        console.log('==================', cardJson);
-
-                        cardJson.contents[cardJson.contents.length - 1].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(script_url)}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
-                        return JSON.stringify(
-                            {
+                            cardJson.contents[
+                                cardJson.contents.length - 1
+                            ].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(
+                                script_url
+                            )}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
+                            return JSON.stringify({
                                 type: 'card',
                                 input,
                                 cardId: 'StandardCard',
                                 cardData: {
                                     cardJson
                                 }
-                            }
-                        )
-                    }
-                    if (script_url && this.cardId) {
-                        // 场景1,cdn方式
-                        const inputs = input.split('|')
-                        return JSON.stringify(
-                            {
+                            })
+                        }
+
+                        if (script_url && this.cardId) {
+                            // 场景1,cdn方式
+                            const inputs = input.split('|')
+                            return JSON.stringify({
                                 type: 'card',
                                 cardId: this.cardId,
                                 cardData: {
@@ -120,30 +126,31 @@ export const buildTool = (manifest: IManifest) => {
                                     app_url: this.url,
                                     inputs: inputs
                                 }
-                            }
-                        )
-                    }
-                    // 场景2,webhook方式
-                    if (this.webhook) {
-                        try {
-                            const headers = { "Content-Type": "application/json" };
-                            const body = JSON.stringify({ input: input });
+                            })
+                        }
+
+                        // 场景2,webhook方式
+                        if (this.webhook) {
+                            const headers = { 'Content-Type': 'application/json' }
+                            const body = JSON.stringify({ input: input })
                             // @ts-ignore
                             const response = await fetch(this.webhook, {
                                 method: 'POST',
                                 headers,
-                                body,
-                            }).then((res: any) => res.json());
+                                body
+                            }).then((res: any) => res.json())
                             if (response.result === true) {
                                 return '正在执行中...'
                             }
-                            return JSON.stringify(response);
-                        } catch (error: any) {
-                            console.log(error)
-                            return error?.message || 'RPC脚本执行异常';
+                            return JSON.stringify(response)
                         }
+
+                        // 场景3,直接返回
+                        throw new Error('RPA无法执行，script_url、webhook、cardId、cardJson都未配置');
+                    } catch (error) {
+                        console.log(error)
+                        return error?.message || 'RPC脚本执行异常';
                     }
-             
                 }
             }
             const tool = new RPATool({
