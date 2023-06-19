@@ -147,7 +147,7 @@ export const buildTool = (manifest: IManifest) => {
 
                         // 场景3,直接返回
                         throw new Error('RPA无法执行，script_url、webhook、cardId、cardJson都未配置');
-                    } catch (error) {
+                    } catch (error: any) {
                         console.log(error)
                         return error?.message || 'RPC脚本执行异常';
                     }
