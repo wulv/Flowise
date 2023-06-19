@@ -142,36 +142,37 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
     const robot = JSON.parse(chatflow.robot)
     const accessToken = await getAccessToken(robot.robotAppKey, robot.robotAppSecret)
 
-    if (msg.cardData?.cardJson) {
-        const res = await axios
-        .post(
-            `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
-            {
-                cardTemplateId: msg.cardId,
-                openConversationId: data.conversationId,
-                cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
-                robotCode: robotCode,
-                // callbackUrl: 'String',
-                cardData: JSON.stringify({
-                    ...msg.cardData?.cardJson,
-                }),
-                // userIdPrivateDataMap: 'String',
-                // unionIdPrivateDataMap: 'String',
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-acs-dingtalk-access-token': accessToken
-                }
-            }
-        )
-        .catch(() => {
-            tokenMap[robot.robotAppKey] = ''
-        })
-    return res
-    }
+
     if (data.conversationType === '2') {
         // 群消息
+        if (msg.cardData?.cardJson) {
+            const res = await axios
+            .post(
+                `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
+                {
+                    cardTemplateId: msg.cardId,
+                    openConversationId: data.conversationId,
+                    cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
+                    robotCode: robotCode,
+                    // callbackUrl: 'String',
+                    cardData: JSON.stringify({
+                        ...msg.cardData?.cardJson,
+                    }),
+                    // userIdPrivateDataMap: 'String',
+                    // unionIdPrivateDataMap: 'String',
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-acs-dingtalk-access-token': accessToken
+                    }
+                }
+            )
+            .catch(() => {
+                tokenMap[robot.robotAppKey] = ''
+            })
+            return res
+        }
         const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
@@ -206,6 +207,34 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
     return res
     } else if (data.conversationType === '1') {
         // 单聊消息
+        if (msg.cardData?.cardJson) {
+            const res = await axios
+            .post(
+                `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
+                {
+                    cardTemplateId: msg.cardId,
+                    singleChatReceiver: JSON.stringify({ userId: data.senderStaffId }),
+                    cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
+                    robotCode: robotCode,
+                    // callbackUrl: 'String',
+                    cardData: JSON.stringify({
+                        ...msg.cardData?.cardJson,
+                    }),
+                    // userIdPrivateDataMap: 'String',
+                    // unionIdPrivateDataMap: 'String',
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-acs-dingtalk-access-token': accessToken
+                    }
+                }
+            )
+            .catch(() => {
+                tokenMap[robot.robotAppKey] = ''
+            })
+        return res
+        }
         const res = await axios
         .post(
             `https://api.dingtalk.com/v1.0/im/v1.0/robot/interactiveCards/send`,
