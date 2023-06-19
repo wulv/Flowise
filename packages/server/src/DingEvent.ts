@@ -217,6 +217,11 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 // callbackUrl: 'String',
                 cardData: JSON.stringify({
                     ...msg.cardData,
+                    robotData: {
+                        openConversationId: data.conversationId,
+                        robotCode: robotCode,
+                        chatFlowId,
+                       }
                 }),
                 // userIdPrivateDataMap: 'String',
                 // unionIdPrivateDataMap: 'String',
