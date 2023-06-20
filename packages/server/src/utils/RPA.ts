@@ -107,8 +107,10 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
+                    console.log(script_url, this.cardJson, 'input-------xxx------------')
                     try {
                         if (script_url && this.cardJson) {
+                            console.log(input, 'input-------------------')
                             const inputs = JSON.parse(input)
                             Object.assign(inputs, {
                                 url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
