@@ -74,6 +74,19 @@ export const buildTool = (manifest: IManifest) => {
                     if (manifest?.api_for_framework?.card_json) {
                         return manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
                     }
+                    if (manifest?.abilities) {
+                        const abilities = manifest?.abilities;
+                        console.log(abilities, 'abilities ------------------')
+                        try {
+                            Object.keys(abilities).forEach((key) => {
+                                if (abilities[key]?.ability_for_runtime?.cardJson) {
+                                    return abilities[key]?.ability_for_runtime?.cardJson
+                                }
+                            })
+                        } catch (err) {
+                            console.log(err, 'err----------');
+                        }
+                    }
                 }
             
                 /** @ignore */
