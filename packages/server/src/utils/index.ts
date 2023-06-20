@@ -216,8 +216,7 @@ export const buildLangchain = async (
             if (reactFlowNode.data.manifest) {
                 const manifest = reactFlowNode.data.manifest
                 // @ts-ignore
-                console.log(Boolean(manifest.abilities))
-                throw new Error('test')
+                throw new Error(`tttttttt${Boolean(manifest.abilities)}`)
                 if (+manifest.type === 0) {
                     newNodeInstance = BuildRPATool(manifest)
                 } else if (+manifest.type === 1) {
