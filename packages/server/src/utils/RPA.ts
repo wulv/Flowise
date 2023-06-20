@@ -5,12 +5,23 @@ import mustache from 'mustache'
 
 export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
-    const properties = manifest?.api_for_model?.input_param?.properties
+    let properties = manifest?.api_for_model?.input_param?.properties
+    let script_url = manifest?.api_for_framework?.script_url || ''
+    try {
+        if (manifest.abilities) {
+            Object.keys(manifest.abilities).forEach((key) => {
+                properties = manifest?.abilities?.[key]?.ability_for_model?.input_param?.properties
+                script_url = manifest?.abilities?.[key]?.ability_for_runtime?.script_url
+            })
+        }
+    } catch (err) {
+
+    }
+  
     const name = manifest?.name_for_human || ''
     const type = manifest?.name_for_model || ''
     const description = manifest?.description_for_human || ''
     // @ts-ignore
-    const script_url = manifest?.api_for_framework?.script_url || ''
     let inputs: any[] = []
 
     console.log(properties, 'properties')
