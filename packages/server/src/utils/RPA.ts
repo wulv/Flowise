@@ -91,21 +91,23 @@ export const buildTool = (manifest: IManifest) => {
                 }
 
                 _getCardJson(fields: any,manifest: any) {
-                    if (manifest?.api_for_framework?.card_json) {
-                        return manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
-                    }
+                    let cardJson = ''
                     if (manifest?.abilities) {
                         const abilities = manifest?.abilities;
                         try {
                             Object.keys(abilities).forEach((key) => {
                                 if (abilities[key]?.ability_for_runtime?.cardJson) {
-                                    return abilities[key]?.ability_for_runtime?.cardJson
+                                    cardJson = abilities[key]?.ability_for_runtime?.cardJson
                                 }
                             })
                         } catch (err) {
                             console.log(err, 'err----------');
                         }
                     }
+                    if (manifest?.api_for_framework?.card_json) {
+                        cardJson = manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
+                    }
+                    return cardJson
                 }
             
                 /** @ignore */
