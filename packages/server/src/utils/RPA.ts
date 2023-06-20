@@ -107,7 +107,6 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     console.log(script_url, this.cardJson, 'input-------xxx------------')
-                    throw new Error()
                     try {
                         if (script_url && this.cardJson) {
                             console.log(input, 'input-------------------')
