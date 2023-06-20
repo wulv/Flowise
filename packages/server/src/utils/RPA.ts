@@ -88,24 +88,22 @@ export const buildTool = (manifest: IManifest) => {
                             })
                             let templateString = ''
                             try {
-                                console.log('==================')
-                                console.log('==================', this.cardJson, inputs)
-                                console.log('==================')
-
                                 templateString = mustache.render(this.cardJson, inputs || {}, {})
                             } catch (error) {
                                 console.error('render error', error)
                                 return
                             }
                             const cardJson = JSON.parse(templateString)
-                            console.log('==================', cardJson)
 
                             cardJson.contents[
                                 cardJson.contents.length - 1
                             ].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(
                                 script_url
                             )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
-                            console.log(JSON.stringify([inputs.users, inputs.index]))
+                            console.log(JSON.stringify([inputs.users, inputs.index]), '=============')
+
+                            console.log(inputs, '-----------')
+
                             return JSON.stringify({
                                 type: 'card',
                                 input,
