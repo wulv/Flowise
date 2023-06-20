@@ -121,10 +121,59 @@ const getConfigExamplesForCurl = (configData, bodyType) => {
 
 const embedCode = (chatflowid) => {
     return `<script type="module">
-    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed@latest/dist/web.js"
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
     Chatbot.init({
         chatflowid: "${chatflowid}",
         apiHost: "${baseURL}",
+    })
+</script>`
+}
+
+const embedCodeCustomization = (chatflowid) => {
+    return `<script type="module">
+    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+    Chatbot.init({
+        chatflowid: "${chatflowid}",
+        apiHost: "${baseURL}",
+        chatflowConfig: {
+            // topK: 2
+        },
+        theme: {
+            button: {
+                backgroundColor: "#3B81F6",
+                right: 20,
+                bottom: 20,
+                size: "medium",
+                iconColor: "white",
+                customIconSrc: "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/svg/google-messages.svg",
+            },
+            chatWindow: {
+                welcomeMessage: "Hello! This is custom welcome message",
+                backgroundColor: "#ffffff",
+                height: 700,
+                width: 400,
+                fontSize: 16,
+                poweredByTextColor: "#303235",
+                botMessage: {
+                    backgroundColor: "#f7f8ff",
+                    textColor: "#303235",
+                    showAvatar: true,
+                    avatarSrc: "https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/parroticon.png",
+                },
+                userMessage: {
+                    backgroundColor: "#3B81F6",
+                    textColor: "#ffffff",
+                    showAvatar: true,
+                    avatarSrc: "https://raw.githubusercontent.com/zahidkhawaja/langchain-chat-nextjs/main/public/usericon.png",
+                },
+                textInput: {
+                    placeholder: "Type your question",
+                    backgroundColor: "#ffffff",
+                    textColor: "#303235",
+                    sendButtonColor: "#3B81F6",
+                }
+            }
+        }
     })
 </script>`
 }
@@ -140,9 +189,11 @@ const APICodeDialog = ({ show, dialogProps, onCancel }) => {
     const [chatflowApiKeyId, setChatflowApiKeyId] = useState('')
     const [selectedApiKey, setSelectedApiKey] = useState({})
     const [checkboxVal, setCheckbox] = useState(false)
+    const [embedChatCheckboxVal, setEmbedChatCheckbox] = useState(false)
 
     const getAllAPIKeysApi = useApi(apiKeyApi.getAllAPIKeys)
     const updateChatflowApi = useApi(chatflowsApi.updateChatflow)
+    const getIsChatflowStreamingApi = useApi(chatflowsApi.getIsChatflowStreaming)
     const getConfigApi = useApi(configApi.getConfig)
 
     const onCheckBoxChanged = (newVal) => {
@@ -150,6 +201,10 @@ const APICodeDialog = ({ show, dialogProps, onCancel }) => {
         if (newVal) {
             getConfigApi.request(dialogProps.chatflowid)
         }
+    }
+
+    const onCheckBoxEmbedChatChanged = (newVal) => {
+        setEmbedChatCheckbox(newVal)
     }
 
     const onApiKeySelected = (keyValue) => {
@@ -503,6 +558,7 @@ query({
     useEffect(() => {
         if (show) {
             getAllAPIKeysApi.request()
+            getIsChatflowStreamingApi.request(dialogProps.chatflowid)
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -555,7 +611,18 @@ query({
                         {value === 0 && (
                             <>
                                 <span>
-                                    Paste this anywhere in the <code>{`<body>`}</code> tag of your html file
+                                    Paste this anywhere in the <code>{`<body>`}</code> tag of your html file.
+                                    <p>
+                                        You can also specify a&nbsp;
+                                        <a
+                                            rel='noreferrer'
+                                            target='_blank'
+                                            href='https://www.npmjs.com/package/flowise-embed?activeTab=versions'
+                                        >
+                                            version
+                                        </a>
+                                        :&nbsp;<code>{`https://cdn.jsdelivr.net/npm/flowise-embed@<version>/dist/web.js`}</code>
+                                    </p>
                                 </span>
                                 <div style={{ height: 10 }}></div>
                             </>
@@ -587,6 +654,31 @@ query({
                                     wrapLines
                                 />
                             </>
+                        )}
+                        {value === 0 && (
+                            <CheckboxInput
+                                label='Show Embed Chat Config'
+                                value={embedChatCheckboxVal}
+                                onChange={onCheckBoxEmbedChatChanged}
+                            />
+                        )}
+                        {value === 0 && embedChatCheckboxVal && (
+                            <CopyBlock
+                                theme={atomOneDark}
+                                text={embedCodeCustomization(dialogProps.chatflowid)}
+                                language={getLang('Embed')}
+                                showLineNumbers={false}
+                                wrapLines
+                            />
+                        )}
+                        {value !== 0 && getIsChatflowStreamingApi.data?.isStreaming && (
+                            <p>
+                                Read&nbsp;
+                                <a rel='noreferrer' target='_blank' href='https://docs.flowiseai.com/how-to-use#streaming'>
+                                    here
+                                </a>
+                                &nbsp;on how to stream response back to application
+                            </p>
                         )}
                     </TabPanel>
                 ))}

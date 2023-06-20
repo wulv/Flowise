@@ -40,7 +40,8 @@ import {
     findAvailableConfigs,
     isSameOverrideConfig,
     replaceAllAPIKeys,
-    isFlowValidForStream
+    isFlowValidForStream,
+    isVectorStoreFaiss
 } from './utils'
 import { cloneDeep } from 'lodash'
 import { getDataSource } from './DataSource'
@@ -101,7 +102,7 @@ export class App {
             const basicAuthMiddleware = basicAuth({
                 users: { [username]: password }
             })
-            const whitelistURLs = ['/api/v1/prediction/', '/api/v1/node-icon/']
+            const whitelistURLs = ['/api/v1/prediction/', '/api/v1/node-icon/', '/api/v1/chatflows-streaming']
             this.app.use((req, res, next) => {
                 if (req.url.includes('/api/v1/')) {
                     whitelistURLs.some((url) => req.url.includes(url)) ? next() : basicAuthMiddleware(req, res, next)
@@ -918,7 +919,7 @@ export class App {
      * @param {IncomingInput} incomingInput
      * @param {INodeData} endingNodeData
      */
-    async startChildProcess(chatflow: ChatFlow, incomingInput: IncomingInput, endingNodeData?: INodeData) {
+    async startChildProcess(chatflow: ChatFlow, chatId: string, incomingInput: IncomingInput, endingNodeData?: INodeData) {
         try {
             const controller = new AbortController()
             const { signal } = controller
@@ -930,6 +931,7 @@ export class App {
 
             const value = {
                 chatflow,
+                chatId,
                 incomingInput,
                 componentNodes: cloneDeep(this.nodesPool.componentNodes),
                 endingNodeData
@@ -994,6 +996,9 @@ export class App {
             console.log('chatflow', req.body?.userId, chatflowid)
             if (!chatflow) return res.status(404).send(`Chatflow ${chatflowid} not found`)
 
+            let chatId = await getChatId(chatflow.id)
+            if (!chatId) chatId = Date.now().toString()
+
             if (!isInternal) {
                 await this.validateKey(req, res, chatflow)
             }
@@ -1045,7 +1050,7 @@ export class App {
                 if (isRebuildNeeded()) {
                     nodeToExecuteData = this.chatflowPool.activeChatflows[chatflowid].endingNodeData
                     try {
-                        const result = await this.startChildProcess(chatflow, incomingInput, nodeToExecuteData)
+                        const result = await this.startChildProcess(chatflow, chatId, incomingInput, nodeToExecuteData)
 
                         return res.json(result)
                     } catch (error) {
@@ -1053,7 +1058,7 @@ export class App {
                     }
                 } else {
                     try {
-                        const result = await this.startChildProcess(chatflow, incomingInput)
+                        const result = await this.startChildProcess(chatflow, chatId, incomingInput)
                         return res.json(result)
                     } catch (error) {
                         return res.status(500).send(error)
@@ -1106,6 +1111,7 @@ export class App {
                         depthQueue,
                         this.nodesPool.componentNodes,
                         incomingInput.question,
+                        chatId,
                         incomingInput?.overrideConfig
                     )
 
@@ -1131,6 +1137,7 @@ export class App {
                 const nodeModule = await import(nodeInstanceFilePath)
                 const nodeInstance = new nodeModule.nodeClass()
 
+                isStreamValid = isStreamValid && !isVectorStoreFaiss(nodeToExecuteData)
                 const result = isStreamValid
                     ? await nodeInstance.run(nodeToExecuteData, incomingInput.question, {
                           chatHistory: incomingInput.history,
@@ -1155,6 +1162,23 @@ export class App {
             console.error(`❌[server]: Flowise Server shut down error: ${e}`)
         }
     }
+}
+
+/**
+ * Get first chat message id
+ * @param {string} chatflowid
+ * @returns {string}
+ */
+export async function getChatId(chatflowid: string) {
+    // first chatmessage id as the unique chat id
+    const firstChatMessage = await getDataSource()
+        .getRepository(ChatMessage)
+        .createQueryBuilder('cm')
+        .select('cm.id')
+        .where('chatflowid = :chatflowid', { chatflowid })
+        .orderBy('cm.createdDate', 'ASC')
+        .getOne()
+    return firstChatMessage ? firstChatMessage.id : ''
 }
 
 let serverApp: App | undefined

@@ -110,6 +110,13 @@ class OpenAI_LLMs implements INode {
                 type: 'number',
                 optional: true,
                 additionalParams: true
+            },
+            {
+                label: 'BasePath',
+                name: 'basepath',
+                type: 'string',
+                optional: true,
+                additionalParams: true
             }
         ]
     }
@@ -126,6 +133,7 @@ class OpenAI_LLMs implements INode {
         const batchSize = nodeData.inputs?.batchSize as string
         const bestOf = nodeData.inputs?.bestOf as string
         const streaming = nodeData.inputs?.streaming as boolean
+        const basePath = nodeData.inputs?.basepath as string
 
         const obj: Partial<OpenAIInput> & { openAIApiKey?: string } = {
             temperature: parseInt(temperature, 10),

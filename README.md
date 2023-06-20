@@ -9,6 +9,8 @@ Drag & drop UI to build your customized LLM flow using [LangchainJS](https://git
 
 ## ⚡Quick Start
 
+Download and Install [NodeJS](https://nodejs.org/en/download) >= 18.15.0
+
 1. Install Flowise
     ```bash
     npm install -g flowise
@@ -64,7 +66,7 @@ Flowise has 3 different modules in a single mono repository.
 
 ### Prerequisite
 
--   Install Yarn
+-   Install [Yarn v1](https://classic.yarnpkg.com/en/docs/install)
     ```bash
     npm i -g yarn
     ```
@@ -105,9 +107,13 @@ Flowise has 3 different modules in a single mono repository.
 
 6. For development build:
 
-    ```bash
-    yarn dev
-    ```
+    - Create `.env` file and specify the `PORT` (refer to `.env.example`) in `packages/ui`
+    - Create `.env` file and specify the `PORT` (refer to `.env.example`) in `packages/server`
+    - Run
+
+        ```bash
+        yarn dev
+        ```
 
     Any code changes will reload the app automatically on [http://localhost:8080](http://localhost:8080)
 
@@ -135,6 +141,8 @@ FLOWISE_PASSWORD=1234
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://docs.flowiseai.com/deployment/render)
 
 ### [AWS](https://docs.flowiseai.com/deployment/aws)
+
+### [Azure](https://docs.flowiseai.com/deployment/azure)
 
 ### [DigitalOcean](https://docs.flowiseai.com/deployment/digital-ocean)
 
