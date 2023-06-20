@@ -96,8 +96,8 @@ export const buildTool = (manifest: IManifest) => {
                         const abilities = manifest?.abilities;
                         try {
                             Object.keys(abilities).forEach((key) => {
-                                if (abilities[key]?.ability_for_runtime?.cardJson) {
-                                    cardJson = abilities[key]?.ability_for_runtime?.cardJson
+                                if (abilities[key]?.ability_for_runtime?.card_json) {
+                                    cardJson = abilities[key]?.ability_for_runtime?.card_json
                                 }
                             })
                         } catch (err) {
