@@ -215,6 +215,7 @@ export const buildLangchain = async (
             // 判断reactFlowNode是否包含manifest属性
             if (reactFlowNode.data.manifest) {
                 const manifest = reactFlowNode.data.manifest
+                // @ts-ignore
                 console.log(Boolean(manifest.abilities))
                 throw new Error('test')
                 if (+manifest.type === 0) {
