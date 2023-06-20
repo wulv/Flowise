@@ -6,11 +6,16 @@ import mustache from 'mustache'
 export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
     let properties = manifest?.api_for_model?.input_param?.properties
+                    // @ts-ignore
     let script_url = manifest?.api_for_framework?.script_url || ''
     try {
+                    // @ts-ignore
         if (manifest.abilities) {
+                    // @ts-ignore
             Object.keys(manifest.abilities).forEach((key) => {
+                    // @ts-ignore
                 properties = manifest?.abilities?.[key]?.ability_for_model?.input_param?.properties
+                    // @ts-ignore
                 script_url = manifest?.abilities?.[key]?.ability_for_runtime?.script_url
             })
         }
