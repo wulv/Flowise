@@ -301,7 +301,7 @@ export class App {
                 console.log('results.id', Date.now() - ts, results.id)
 
                 return res.json({
-                    url: `https://flowise-proxy.pre-fc.alibaba-inc.com/p/${results.id}`
+                    url: `https://pre-n.dingtalk.com/ding-tools/flowise-ui/preview.html?chatflowid=${results.id}`
                 })
             } catch (error: any) {
                 console.log(error?.message)
