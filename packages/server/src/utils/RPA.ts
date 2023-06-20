@@ -104,9 +104,9 @@ export const buildTool = (manifest: IManifest) => {
                             console.log(err, 'err----------');
                         }
                     }
-                    // if (manifest?.api_for_framework?.card_json) {
-                    //     cardJson = manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
-                    // }
+                    if (manifest?.api_for_framework?.card_json) {
+                        cardJson = manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
+                    }
                     return cardJson
                 }
             
