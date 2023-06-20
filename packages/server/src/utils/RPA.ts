@@ -84,7 +84,7 @@ export const buildTool = (manifest: IManifest) => {
                             Object.assign(inputs, {
                                 url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
                                     script_url
-                                )}&inputs=${encodeURIComponent(JSON.stringify(inputs))}`
+                                )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
                             })
                             let templateString = ''
                             try {
@@ -105,6 +105,7 @@ export const buildTool = (manifest: IManifest) => {
                             ].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?url=${encodeURIComponent(
                                 script_url
                             )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
+                            console.log(JSON.stringify([inputs.users, inputs.index]))
                             return JSON.stringify({
                                 type: 'card',
                                 input,
