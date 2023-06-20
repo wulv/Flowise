@@ -76,7 +76,7 @@ export const buildTool = (manifest: IManifest) => {
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
 
-                    console.log(this.description, this.url, 'this.description-------======---')
+                    console.log(this.description, script_url, Boolean(this.cardJson), 'this.description-------======---')
 
                 }
 
