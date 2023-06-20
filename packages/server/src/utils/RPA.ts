@@ -20,7 +20,7 @@ export const buildTool = (manifest: IManifest) => {
             })
         }
     } catch (err) {
-
+        console.log(err, 'err----------')
     }
   
     const name = manifest?.name_for_human || ''
@@ -29,7 +29,9 @@ export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
     let inputs: any[] = []
 
-    console.log(properties, 'properties')
+    console.log(script_url, properties, 'script_url----------')
+
+
     if (properties) {
         inputs = Object.keys(properties).map((key) => {
             return {
@@ -73,7 +75,9 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
-            
+
+                    console.log(this.description, this.url, 'this.description-------======---')
+
                 }
 
                 _getCardId(fields: any, manifest: any) {
