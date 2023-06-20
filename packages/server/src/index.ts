@@ -10,8 +10,9 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { HumanChatMessage } from 'langchain/schema'
 import * as cheerio from 'cheerio'
 import { StructuredOutputParser } from 'langchain/output_parsers'
-import { PromptTemplate } from "langchain/prompts";
-import { LLMChain } from "langchain/chains";
+import { PromptTemplate } from 'langchain/prompts'
+import { LLMChain } from 'langchain/chains'
+import { OpenAI } from 'langchain/llms/openai'
 
 import {
     IChatFlow,
@@ -370,7 +371,7 @@ export class App {
                     cardId,
                     cardData
                 },
-                { conversationType:conversationType || '2', conversationId, robotCode },
+                { conversationType: conversationType || '2', conversationId, robotCode },
                 chatFlowId,
                 robotCode
             )
@@ -458,6 +459,44 @@ export class App {
             return res.json(responseA)
         })
 
+        // gencode
+        this.app.post('/api/v1/gencode', async (req: Request, res: Response) => {
+            const params = req.body.params as string[]
+            const actions = req.body.actions as any[]
+            const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
+            const OPENAI_API_KEY = req.body.apiKey as string
+            const parser = StructuredOutputParser.fromNamesAndDescriptions({
+                code: '生成的js函数代码'
+            })
+
+            const formatInstructions = parser.getFormatInstructions()
+
+            const prompt = new PromptTemplate({
+                template: `你是一个前端高级开发工程师，我录制了一个web界面用户行为，请按照我录制的动作行为，生成一个函数，使用playwright去操作用户的行为。
+                  录制的动作如下：{actions}
+                  注意，不要使用循环，每一步动作行为，实现对应的playwright代码，同时我需要将{params}泛化为函数的入参，并且对应pplaywright代码也要使用参数，请实现这个函数，我已经在外层创建好了page变量，你不需要重复创建。请返回json格式响应，{format_instructions}`,
+                inputVariables: ['params', 'actions'],
+                partialVariables: { format_instructions: formatInstructions }
+            })
+            const model = new OpenAI(
+                {
+                    modelName: 'gpt-3.5-turbo',
+                    openAIApiKey: OPENAI_API_KEY,
+                    verbose: true,
+                    streaming: true
+                },
+                { basePath: OPENAI_API_BASE }
+            )
+            const input = await prompt.format({
+                params: params.join(','),
+                actions: JSON.stringify(actions)
+            })
+            const response = await model.call(input)
+            console.log(response)
+            const output = await parser.parse(response)
+            return res.json(output)
+        })
+
         // askForNextStep
         this.app.post('/api/v1/askForNextStep', async (req: Request, res: Response) => {
             const OPENAI_API_BASE = 'https://api.openai-proxy.com/v1'
@@ -465,13 +504,13 @@ export class App {
             const goal = req.body.goal as string
             const title = req.body.title as string
             const isText = req.body.isText as boolean
-            const historyStep = req.body.historyStep as string[] || []
+            const historyStep = (req.body.historyStep as string[]) || []
             const dom = req.body.dom as string
             const chat = new ChatOpenAI(
                 {
                     modelName: 'gpt-3.5-turbo-16k',
                     openAIApiKey: OPENAI_API_KEY,
-                    verbose: true,
+                    verbose: true
                 },
                 { basePath: OPENAI_API_BASE }
             )
@@ -506,8 +545,8 @@ export class App {
                 historyStep: historyStep.join(',') || '暂无执行动作'
             })
             // chatgpt询问，返回一个元素选择器
-       
-            return  res.json(result.text);
+
+            return res.json(result.text)
         })
 
         // ----------------------------------------
