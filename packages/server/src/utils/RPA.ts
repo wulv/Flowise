@@ -92,7 +92,6 @@ export const buildTool = (manifest: IManifest) => {
                     }
                     if (manifest?.abilities) {
                         const abilities = manifest?.abilities;
-                        console.log(abilities, 'abilities ------------------')
                         try {
                             Object.keys(abilities).forEach((key) => {
                                 if (abilities[key]?.ability_for_runtime?.cardJson) {
@@ -108,6 +107,7 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     console.log(script_url, this.cardJson, 'input-------xxx------------')
+                    throw new Error()
                     try {
                         if (script_url && this.cardJson) {
                             console.log(input, 'input-------------------')

@@ -224,7 +224,7 @@ export const buildLangchain = async (
                 } else if (+manifest.type === 3) {
                     newNodeInstance = buildJSAPITool(manifest)
                     // @ts-ignore
-                } else if (manifest?.abilities) {
+                } else if (manifest.abilities) {
                     newNodeInstance = BuildRPATool(manifest)
                 }
                 // flowNodes[nodeIndex].data.instance = await newNodeInstance.init(reactFlowNode.data, question)
