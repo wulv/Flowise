@@ -117,10 +117,14 @@ export const buildTool = (manifest: IManifest) => {
                         if (script_url && this.cardJson) {
                             console.log(input, 'input-------------------')
                             const inputs = JSON.parse(input)
+                            const params = []
+                            // 读出参拼参数
+                            inputs.users && params.push(inputs.users)
+                            inputs.index && params.push(inputs.index)
                             Object.assign(inputs, {
                                 url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
                                     script_url
-                                )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
+                                )}&inputs=${encodeURIComponent(JSON.stringify(params))}`
                             })
                             let templateString = ''
                             try {
@@ -135,8 +139,8 @@ export const buildTool = (manifest: IManifest) => {
                                 cardJson.contents.length - 1
                             ].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
                                 script_url
-                            )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
-                            console.log(JSON.stringify([inputs.users, inputs.index]), '=============')
+                            )}&inputs=${encodeURIComponent(JSON.stringify(params))}`
+                            console.log(JSON.stringify(params), '=============')
 
                             console.log(inputs, '-----------')
 
