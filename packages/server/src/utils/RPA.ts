@@ -189,7 +189,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new RPATool({
-                cardId: nodeData.inputs?.cardId
+                cardId: nodeData?.inputs?.cardId || ''
             })
     
             return tool
