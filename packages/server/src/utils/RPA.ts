@@ -112,10 +112,26 @@ export const buildTool = (manifest: IManifest) => {
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log(script_url, this.cardJson, 'input-------xxx------------')
                     try {
+                        // mock
+                        const cardId = '761995aa-9ea4-49ab-8f07-034c8be7c798.schema';
+                        return JSON.stringify({
+                            type: 'card',
+                            cardId,
+                            cardData: {
+                                script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_get_okr_dingtalk.js',
+                                app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                inputs: JSON.stringify({
+                                    name: '桂花琉璃',
+                                    cup: '超超超大杯',
+                                    temp: '正常冰',
+                                    sugar: '不另外加糖'
+                                })
+                            }
+                        })
+
                         if (script_url && this.cardJson) {
-                            console.log(input, 'input-------------------')
                             const inputs = JSON.parse(input)
                             const params = []
                             // 读出参拼参数
