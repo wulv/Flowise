@@ -20,7 +20,7 @@ export const buildTool = (manifest: IManifest) => {
             })
         }
     } catch (err) {
-
+        console.log(err, 'err----------')
     }
   
     const name = manifest?.name_for_human || ''
@@ -29,7 +29,9 @@ export const buildTool = (manifest: IManifest) => {
     // @ts-ignore
     let inputs: any[] = []
 
-    console.log(properties, 'properties')
+    console.log(script_url, properties, 'script_url----------')
+
+
     if (properties) {
         inputs = Object.keys(properties).map((key) => {
             return {
@@ -73,7 +75,9 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
-            
+
+                    console.log(this.description, script_url, Boolean(this.cardJson), 'this.description-------======---')
+
                 }
 
                 _getCardId(fields: any, manifest: any) {
@@ -87,34 +91,56 @@ export const buildTool = (manifest: IManifest) => {
                 }
 
                 _getCardJson(fields: any,manifest: any) {
-                    if (manifest?.api_for_framework?.card_json) {
-                        return manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
-                    }
+                    let cardJson = ''
                     if (manifest?.abilities) {
                         const abilities = manifest?.abilities;
                         try {
                             Object.keys(abilities).forEach((key) => {
-                                if (abilities[key]?.ability_for_runtime?.cardJson) {
-                                    return abilities[key]?.ability_for_runtime?.cardJson
+                                if (abilities[key]?.ability_for_runtime?.card_json) {
+                                    cardJson = abilities[key]?.ability_for_runtime?.card_json
                                 }
                             })
                         } catch (err) {
                             console.log(err, 'err----------');
                         }
                     }
+                    if (manifest?.api_for_framework?.card_json) {
+                        cardJson = manifest?.api_for_framework?.card_json?.jsons?.[0] || '{}'
+                    }
+                    return cardJson
                 }
             
                 /** @ignore */
                 async _call(input: string) {
-                    console.log(script_url, this.cardJson, 'input-------xxx------------')
                     try {
+                        // mock
+                        const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
+                        return JSON.stringify({
+                            type: 'card',
+                            cardId,
+                            cardData: {
+                                script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_coffee.js',
+                                app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                inputs: {
+                                    name: '桂花琉璃',
+                                    cup: '超超超大杯',
+                                    temp: '正常冰',
+                                    sugar: '不另外加糖'
+                                }
+                            }
+                        })
+
                         if (script_url && this.cardJson) {
-                            console.log(input, 'input-------------------')
                             const inputs = JSON.parse(input)
+                            const params = []
+                            // 读出参拼参数
+                            inputs.users && params.push(inputs.users)
+                            inputs.index && params.push(inputs.index)
                             Object.assign(inputs, {
                                 url: `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
                                     script_url
-                                )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
+                                )}&inputs=${encodeURIComponent(JSON.stringify(params))}`
                             })
                             let templateString = ''
                             try {
@@ -125,13 +151,13 @@ export const buildTool = (manifest: IManifest) => {
                             }
                             const cardJson = JSON.parse(templateString)
 
+                            // 使用 mustache 替换会encode
                             cardJson.contents[
                                 cardJson.contents.length - 1
                             ].actions[0].url.all = `https://applink.dingtalk.com/copilot/run_script?script_url=${encodeURIComponent(
                                 script_url
-                            )}&inputs=${encodeURIComponent(JSON.stringify([inputs.users, inputs.index]))}`
-                            console.log(JSON.stringify([inputs.users, inputs.index]), '=============')
-
+                            )}&inputs=${encodeURIComponent(JSON.stringify(params))}`
+                            console.log(cardJson, '=============')
                             console.log(inputs, '-----------')
 
                             return JSON.stringify({
@@ -183,7 +209,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new RPATool({
-                cardId: nodeData.inputs?.cardId
+                cardId: nodeData?.inputs?.cardId || ''
             })
     
             return tool
