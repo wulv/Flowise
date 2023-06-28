@@ -51,7 +51,7 @@ export const buildTool = (manifest: IManifest) => {
         description: description,
         baseClasses: [type,],
         inputs: inputs,
-        init: async (nodeData: INodeData) => {
+        init: async (nodeData: INodeData, question: string) => {
             class RPATool extends Tool {
                 name: string
             
@@ -113,24 +113,24 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        // mock
-                        const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
-                        return JSON.stringify({
-                            type: 'card',
-                            cardId,
-                            cardData: {
-                                script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_coffee.js',
-                                app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                inputs: {
-                                    name: '桂花琉璃',
-                                    cup: '超超超大杯',
-                                    temp: '正常冰',
-                                    sugar: '不另外加糖'
+                        if (question && question.includes('咖啡')) {
+                            const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
+                            return JSON.stringify({
+                                type: 'card',
+                                cardId,
+                                cardData: {
+                                    script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_coffee.js',
+                                    app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                    home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                    inputs: {
+                                        name: '桂花琉璃',
+                                        cup: '超超超超大杯',
+                                        temp: '正常冰',
+                                        sugar: '不另外加糖'
+                                    }
                                 }
-                            }
-                        })
-
+                            })
+                        }
                         if (script_url && this.cardJson) {
                             const inputs = JSON.parse(input)
                             const params = []
