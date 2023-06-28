@@ -114,20 +114,20 @@ export const buildTool = (manifest: IManifest) => {
                 async _call(input: string) {
                     try {
                         // mock
-                        const cardId = '761995aa-9ea4-49ab-8f07-034c8be7c798.schema';
+                        const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
                         return JSON.stringify({
                             type: 'card',
                             cardId,
                             cardData: {
-                                script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_get_okr_dingtalk.js',
+                                script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_coffee.js',
                                 app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
                                 home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                inputs: JSON.stringify({
+                                inputs: {
                                     name: '桂花琉璃',
                                     cup: '超超超大杯',
                                     temp: '正常冰',
                                     sugar: '不另外加糖'
-                                })
+                                }
                             }
                         })
 
