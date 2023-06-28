@@ -119,18 +119,18 @@ export class App {
 
         // Get all component nodes
         this.app.get('/api/v1/nodes', async (req: Request, res: Response) => {
-            // const returnData = []
-            // for (const nodeName in this.nodesPool.componentNodes) {
-            //     const clonedNode = cloneDeep(this.nodesPool.componentNodes[nodeName])
-            //     returnData.push(clonedNode)
-            // }
-            const nodes = await this.AppDataSource.getRepository(Node).find()
-            const returnData = nodes.map((item) => ({
-                ...item,
-                inputs: JSON.parse(item.inputs),
-                outputs: item.outputs ? JSON.parse(item.outputs) : undefined,
-                baseClasses: JSON.parse(item.baseClasses)
-            }))
+            const returnData = []
+            for (const nodeName in this.nodesPool.componentNodes) {
+                const clonedNode = cloneDeep(this.nodesPool.componentNodes[nodeName])
+                returnData.push(clonedNode)
+            }
+            // const nodes = await this.AppDataSource.getRepository(Node).find()
+            // const returnData = nodes.map((item) => ({
+            //     ...item,
+            //     inputs: JSON.parse(item.inputs),
+            //     outputs: item.outputs ? JSON.parse(item.outputs) : undefined,
+            //     baseClasses: JSON.parse(item.baseClasses)
+            // }))
             return res.json(returnData)
         })
 
