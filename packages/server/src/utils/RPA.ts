@@ -123,24 +123,22 @@ export const buildTool = (manifest: IManifest) => {
 
                         console.log('input============22222222', input)
 
-                        if (question && question.includes('咖啡')) {
-                            const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
-                            return JSON.stringify({
-                                type: 'card',
-                                cardId,
-                                cardData: {
-                                    script_url: 'http://dev-opencdn.dingtalk.net/ddAiPlugin/rpa_coffee_0630_pw.js',
-                                    app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                    home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                    inputs: {
-                                        name: '桂花琉璃',
-                                        cup: '超超超超大杯',
-                                        temp: '正常冰',
-                                        sugar: '不另外加糖'
-                                    }
+                        const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
+                        return JSON.stringify({
+                            type: 'card',
+                            cardId,
+                            cardData: {
+                                script_url: 'http://dev-opencdn.dingtalk.net/ddAiPlugin/rpa_coffee_0630_pw.js',
+                                app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
+                                inputs: {
+                                    name: '桂花琉璃',
+                                    cup: '超超超超大杯',
+                                    temp: '正常冰',
+                                    sugar: '不另外加糖'
                                 }
-                            })
-                        }
+                            }
+                        })
 
                         if (script_url && this.cardId) {
                             // 场景1,cdn方式
