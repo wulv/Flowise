@@ -11,6 +11,8 @@ export const buildTool = (manifest: IManifest) => {
 
     let descriptionForModel = '';
 
+    let home_url = '';
+
     try {
         // @ts-ignore
         if (manifest.abilities) {
@@ -20,6 +22,7 @@ export const buildTool = (manifest: IManifest) => {
                 const ability = manifest?.abilities[key];
                 properties = ability?.ability_for_model?.input_param?.properties
                 script_url = ability?.ability_for_runtime?.script_url
+                home_url = ability?.ability_for_runtime?.target_url
 
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
@@ -125,9 +128,23 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url)
+                        console.log('description----------11111111', this.cardId, script_url, home_url)
 
-                        console.log('input============22222222', input)
+                        console.log('input============22222222', typeof input, JSON.parse(input))
+
+                        if (script_url && this.cardId) {
+                            const cardJson = {
+                                type: 'card',
+                                cardId: this.cardId,
+                                cardData: {
+                                    script_url: script_url,
+                                    app_url: home_url,
+                                    home_url,
+                                    inputs: JSON.parse(input)
+                                }
+                            }
+                            return JSON.stringify(cardJson)
+                        }
 
                         const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
                         return JSON.stringify({
