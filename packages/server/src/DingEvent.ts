@@ -204,6 +204,24 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
         )
         .catch((e) => {
             console.log(e?.response?.data, '卡片请求错误=========')
+            console.log({
+                cardTemplateId: msg.cardId,
+                openConversationId: data.conversationId,
+                cardBizId: '112-21-51c965a4-c3bb-469b-b8b5-059fb25bb4f5.schema' + (+new Date()),
+                robotCode: robotCode,
+                // callbackUrl: 'String',
+                cardData: JSON.stringify({
+                    ...msg.cardData,
+                   robotData: {
+                    openConversationId: data.conversationId,
+                    robotCode: robotCode,
+                    conversationType: data.conversationType,
+                    chatFlowId,
+                   }
+                }),
+                // userIdPrivateDataMap: 'String',
+                // unionIdPrivateDataMap: 'String',
+            }, '卡片请求错误=========')
             tokenMap[robot.robotAppKey] = ''
         })
     return res
