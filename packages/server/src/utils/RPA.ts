@@ -113,6 +113,7 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
+                        console.log('question==================', question)
                         if (question && question.includes('咖啡')) {
                             const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
                             return JSON.stringify({
