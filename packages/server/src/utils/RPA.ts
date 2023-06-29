@@ -12,8 +12,11 @@ export const buildTool = (manifest: IManifest) => {
     let description = '';
 
     try {
+        // @ts-ignore
         if (manifest.abilities) {
+            // @ts-ignore
             Object.keys(manifest.abilities).forEach((key) => {
+                // @ts-ignore
                 const ability = manifest?.abilities[key];
                 properties = ability?.ability_for_model?.input_param?.properties
                 script_url = ability?.ability_for_runtime?.script_url
