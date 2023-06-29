@@ -113,14 +113,18 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('arguments==================', arguments)
+                        console.log('arguments==================', JSON.stringify(arguments))
+                        console.log('input==================', input)
+
+                        console.log('input==================', this.cardId)
+
                         if (question && question.includes('咖啡')) {
                             const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
                             return JSON.stringify({
                                 type: 'card',
                                 cardId,
                                 cardData: {
-                                    script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/raw/master/rpa_coffee.js',
+                                    script_url: 'http://dev-opencdn.dingtalk.net/ddAiPlugin/rpa_coffee_0630_pw.js',
                                     app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
                                     home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
                                     inputs: {
@@ -132,6 +136,21 @@ export const buildTool = (manifest: IManifest) => {
                                 }
                             })
                         }
+
+                        if (script_url && this.cardId) {
+                            // 场景1,cdn方式
+                            const inputs = input.split('|')
+                            return JSON.stringify({
+                                type: 'card',
+                                cardId: this.cardId,
+                                cardData: {
+                                    script_url: `${script_url}`,
+                                    app_url: this.url,
+                                    inputs: inputs
+                                }
+                            })
+                        }
+
                         if (script_url && this.cardJson) {
                             const inputs = JSON.parse(input)
                             const params = []
@@ -167,20 +186,6 @@ export const buildTool = (manifest: IManifest) => {
                                 cardId: 'StandardCard',
                                 cardData: {
                                     cardJson
-                                }
-                            })
-                        }
-
-                        if (script_url && this.cardId) {
-                            // 场景1,cdn方式
-                            const inputs = input.split('|')
-                            return JSON.stringify({
-                                type: 'card',
-                                cardId: this.cardId,
-                                cardData: {
-                                    script_url: `${script_url}`,
-                                    app_url: this.url,
-                                    inputs: inputs
                                 }
                             })
                         }
