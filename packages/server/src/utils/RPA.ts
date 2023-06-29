@@ -20,8 +20,14 @@ export const buildTool = (manifest: IManifest) => {
                 const ability = manifest?.abilities[key];
                 properties = ability?.ability_for_model?.input_param?.properties
                 script_url = ability?.ability_for_runtime?.script_url
-                descriptionForModel = ability?.ability_for_model?.description + 
-                `input需要从user's input分析，要求 input 格式为 json object，input 中每个 key 包含以下函数调用示例中的 args 参数对象中的每个参数，key 的含义参考函数示例中的注释，以下为函数示例===` + ability?.ability_for_model.example + '==='
+
+                const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
+                    const obj = ability.ability_for_model.input_param[key]
+                    const { description, type, example } = obj
+                    return `参数${index}：${key}, ${description}, 类型为${type}, 例如：${example}`
+                }).join('\n')
+
+                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + inputStr + '。最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
     } catch (err) {
