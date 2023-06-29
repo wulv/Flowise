@@ -370,7 +370,7 @@ export async function chatQuery(data: any, id: string) {
     const response = await axios.post(`http://127.0.0.1:3000/api/v1/prediction/${id}`, data).catch((e) => {
         console.log(e?.response?.data, '请求错误=========')
     })
-    return response.data
+    return response?.data
 }
 
 // export const registerDingEvent = async () => {
