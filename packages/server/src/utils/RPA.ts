@@ -9,7 +9,7 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
     let script_url = manifest?.api_for_framework?.script_url || ''
 
-    let description = '';
+    let descriptionForModel = '';
 
     try {
         // @ts-ignore
@@ -20,7 +20,7 @@ export const buildTool = (manifest: IManifest) => {
                 const ability = manifest?.abilities[key];
                 properties = ability?.ability_for_model?.input_param?.properties
                 script_url = ability?.ability_for_runtime?.script_url
-                description = ability?.ability_for_model?.description + 
+                descriptionForModel = ability?.ability_for_model?.description + 
                 `input需要从user's input分析，要求 input 格式为 json object，input 中每个 key 包含以下函数调用示例中的 args 参数对象中的每个参数，key 的含义参考函数示例中的注释，以下为函数示例===` + ability?.ability_for_model.example + '==='
             })
         }
@@ -30,7 +30,7 @@ export const buildTool = (manifest: IManifest) => {
   
     const name = manifest?.name_for_human || ''
     const type = manifest?.name_for_model || ''
-    description = description ? description : manifest?.description_for_human || ''
+    const description = manifest?.description_for_human || ''
     // @ts-ignore
     let inputs: any[] = []
 
@@ -69,7 +69,7 @@ export const buildTool = (manifest: IManifest) => {
             
                 constructor(fields: any) {
                     super()
-                    this.description =  manifest.description_for_model
+                    this.description = descriptionForModel || manifest.description_for_model
                     this.url =  manifest.api_for_framework?.url
                     this.name = name
                     this.cardId = this._getCardId(fields, manifest);
@@ -89,6 +89,10 @@ export const buildTool = (manifest: IManifest) => {
 
                     if (manifest?.api_for_model?.input_param?.properties?.cardId) {
                         return manifest?.api_for_model?.input_param?.properties?.cardId?.sample
+                    }
+
+                    if (manifest?.abilities) {
+                        return manifest?.abilities[Object.keys(manifest?.abilities)[0]]?.ability_for_runtime?.card_id
                     }
                 }
 
@@ -115,12 +119,9 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log(description, 'description----------')
-                        console.log('arguments==================', JSON.stringify(arguments))
-                        console.log('input==================', input)
-                        console.log('input==================', this.cardId)
+                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url)
 
-                        console.log('input============', input, this.cardId, script_url)
+                        console.log('input============22222222', input)
 
                         if (question && question.includes('咖啡')) {
                             const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
