@@ -708,11 +708,11 @@ export class App {
                 await sendMsg('历史消息已清除', data, req.params.id, data.robotCode)
                 return res.json({ code: 0 })
             }
-            if (this.cacheMap.get(data.conversationId)) {
-                await sendMsg('别催我，正在处理上一条消息呢！', data, req.params.id, data.robotCode)
-                return res.json({ code: 0 })
-            }
-            this.cacheMap.set(data.conversationId, true)
+            // if (this.cacheMap.get(data.conversationId)) {
+            //     await sendMsg('别催我，正在处理上一条消息呢！', data, req.params.id, data.robotCode)
+            //     return res.json({ code: 0 })
+            // }
+            // this.cacheMap.set(data.conversationId, true)
 
             const id = req.params.id
             console.log('data', data)
