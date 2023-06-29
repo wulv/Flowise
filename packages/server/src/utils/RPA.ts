@@ -119,7 +119,7 @@ export const buildTool = (manifest: IManifest) => {
                                 type: 'card',
                                 cardId,
                                 cardData: {
-                                    script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/blob/master/rpa_coffee.js',
+                                    script_url: 'https://code.alibaba-inc.com/tianqi.ctq/public-pages/raw/master/rpa_coffee.js',
                                     app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
                                     home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
                                     inputs: {
