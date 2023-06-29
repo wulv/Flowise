@@ -799,7 +799,7 @@ export class App {
             } catch (error) {
                 console.log(error)
             }
-            this.cacheMap.set(data.conversationId, false)
+            // this.cacheMap.set(data.conversationId, false)
             return res.json({ code: 0 })
         })
 
