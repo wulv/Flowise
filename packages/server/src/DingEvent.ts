@@ -168,7 +168,8 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                     }
                 }
             )
-            .catch(() => {
+            .catch((e) => {
+                console.log(e?.response?.data, '卡片请求错误=========')
                 tokenMap[robot.robotAppKey] = ''
             })
             return res
@@ -202,7 +203,7 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
             }
         )
         .catch((e) => {
-            console.log(e)
+            console.log(e?.response?.data, '卡片请求错误=========')
             tokenMap[robot.robotAppKey] = ''
         })
     return res
@@ -231,7 +232,8 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                     }
                 }
             )
-            .catch(() => {
+            .catch((e) => {
+                console.log(e?.response?.data, '卡片请求错误=========')
                 tokenMap[robot.robotAppKey] = ''
             })
         return res
@@ -264,7 +266,8 @@ export const sendCard = async (msg: { cardId: string; cardData: any }, data: any
                 }
             }
         )
-        .catch(() => {
+        .catch((e) => {
+            console.log(e?.response?.data, '卡片请求错误=========')
             tokenMap[robot.robotAppKey] = ''
         })
     return res
