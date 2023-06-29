@@ -27,10 +27,13 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `参数${index}：${key}, ${description}, 类型为${type}, 例如：${example}`
+                    return `参数${index}：${key}, ${description}, 类型为${type}, 示例：${example}`
                 }).join('\n')
 
-                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + inputStr + '。最后将object通过JSON.stringify处理后，作为 input 返回。'
+                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
+                inputStr + 
+                `。如果某几个参数未从 user's input 中获取到，则采用示例值。` +
+                '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
     } catch (err) {
@@ -128,9 +131,11 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('description----------11111111', this.cardId, script_url, home_url)
+                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url, home_url)
 
-                        console.log('input============22222222', typeof input, JSON.parse(input))
+                        console.log('input============22222222', typeof input, JSON.parse(input), '\n\n')
+
+                        console.log('description----------11111111', descriptionForModel)
 
                         if (script_url && this.cardId) {
                             const cardJson = {
