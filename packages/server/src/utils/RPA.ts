@@ -27,13 +27,13 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `${key}： ${description}, 类型为${type}, 默认值为：${example}。`
-                }).join('')
+                    return `参数${index}：${key}, ${description}, 类型为${type}, 示例：${example}`
+                }).join('\n')
 
-                descriptionForModel = ability?.ability_for_model?.description + 
-                `。需要返回的结果是一个 object，以下为 object 中每个 key 的释义、类型、默认值：` + 
-                inputStr +
-                `object 必须包含以上每一个 key，如果未从 user's input 解析出，则使用对应的默认值。最后将 object 通过 JSON.stringify 处理后，作为 input 返回。`
+                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
+                inputStr + 
+                `。如果某几个参数未从 user's input 中获取到，则采用示例值。` +
+                '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
     } catch (err) {
@@ -89,6 +89,9 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
+
+                    console.log(this.description, script_url, Boolean(this.cardJson), 'this.description-------======---')
+
                 }
 
                 _getCardId(fields: any, manifest: any) {
@@ -128,11 +131,11 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('descriptionForModel====', descriptionForModel, '\n')
-                        console.log('cardId====', this.cardId, '\n')
-                        console.log('script_url====', script_url, '\n')
-                        console.log('home_url====', home_url, '\n')
-                        console.log('input====', typeof input, input, '\n')
+                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url, home_url)
+
+                        console.log('input============22222222', typeof input, JSON.parse(input), '\n\n')
+
+                        console.log('description----------11111111', descriptionForModel)
 
                         if (script_url && this.cardId) {
                             try {
@@ -147,9 +150,8 @@ export const buildTool = (manifest: IManifest) => {
                                     }
                                 }
                                 return JSON.stringify(cardJson)
-                            } catch (err) {
-                                console.log(input, 'input 解析错误------------------------')
-                            }
+                            } catch (err) {}
+                            
                         }
 
                         const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
