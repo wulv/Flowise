@@ -31,9 +31,9 @@ export const buildTool = (manifest: IManifest) => {
                 }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description + 
-                `。需要返回的结果是一个 object，object 的每个 key 都从 user's input 分析，如果不存在，则使用默认值。以下为每个 key 的释义、类型、默认值：` + 
+                `。需要返回的结果是一个 object，以下为 object 中每个 key 的释义、类型、默认值：` + 
                 inputStr +
-                '最后将 object 通过 JSON.stringify 处理后，作为 input 返回。'
+                `object 必须包含以上每一个 key，如果未从 user's input 解析出，则使用对应的默认值。最后将 object 通过 JSON.stringify 处理后，作为 input 返回。`
             })
         }
     } catch (err) {
