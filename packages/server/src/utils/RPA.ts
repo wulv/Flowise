@@ -27,8 +27,8 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `${key}： ${description}, 类型为${type}, 默认值为：${example}`
-                }).join('\n')
+                    return `${key}： ${description}, 类型为${type}, 默认值为：${example}。`
+                }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description + 
                 `。需要返回的结果是一个 object，object 的每个 key 都从 user's input 分析，如果不存在，则使用默认值。以下为每个 key 的释义、类型、默认值：\n` + 
