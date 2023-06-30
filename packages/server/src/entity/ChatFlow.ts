@@ -27,4 +27,7 @@ export class ChatFlow implements IChatFlow {
 
     @Column({ nullable: true })
     robot: string
+
+    @Column({ nullable: true })
+    appId: string
 }
