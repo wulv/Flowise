@@ -27,12 +27,12 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `参数${index}：${key}, ${description}, 类型为${type}, 默认值为：${example}`
+                    return `${key}： ${description}, 类型为${type}, 默认值为：${example}`
                 }).join('\n')
 
-                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
+                descriptionForModel = ability?.ability_for_model?.description + `。input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
                 inputStr + '\n' + 
-                `。如果某几个参数未从 user's input 中获取到，则采用上方对应参数的默认值。` +
+                `。以上每个参数均为必须，如果未从user's input中获取到，则使用默认值。` +
                 '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
