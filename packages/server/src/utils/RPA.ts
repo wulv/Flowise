@@ -27,7 +27,7 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `参数${index}：${key}, ${description}, 类型为${type}, 示例：${example}`
+                    return `参数${index}：${key}, ${description}, 类型为${type}, 默认值：${example}`
                 }).join('\n')
 
                 descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
