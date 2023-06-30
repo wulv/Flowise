@@ -32,7 +32,7 @@ export const buildTool = (manifest: IManifest) => {
 
                 descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
                 inputStr + 
-                `。如果某几个参数未从 user's input 中获取到，则采用示例值。如果 object 中存在名为 name 的 key，并且 name 的值为"美式"，则将值修改为"标准美式"。` +
+                `。如果某几个参数未从 user's input 中获取到，则采用示例值。` +
                 '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
