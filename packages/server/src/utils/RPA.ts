@@ -89,9 +89,6 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
-
-                    console.log(this.description, script_url, Boolean(this.cardJson), 'this.description-------======---')
-
                 }
 
                 _getCardId(fields: any, manifest: any) {
@@ -131,11 +128,11 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url, home_url)
-
-                        console.log('input============22222222', typeof input, JSON.parse(input), '\n\n')
-
-                        console.log('description----------11111111', descriptionForModel)
+                        console.log('descriptionForModel====', descriptionForModel, '\n')
+                        console.log('cardId====', this.cardId, '\n')
+                        console.log('script_url====', script_url, '\n')
+                        console.log('home_url====', home_url, '\n')
+                        console.log('input====', typeof input, input, '\n')
 
                         if (script_url && this.cardId) {
                             try {
@@ -150,26 +147,10 @@ export const buildTool = (manifest: IManifest) => {
                                     }
                                 }
                                 return JSON.stringify(cardJson)
-                            } catch (err) {}
-                            
-                        }
-
-                        const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
-                        return JSON.stringify({
-                            type: 'card',
-                            cardId,
-                            cardData: {
-                                script_url: 'http://dev-opencdn.dingtalk.net/ddAiPlugin/rpa_coffee_0630_pw.js',
-                                app_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                home_url: 'dingtalk://platformapi/startapp?appId=2021001108668186&mini_app_launch_scene=op_thzy',
-                                inputs: {
-                                    name: '桂花琉璃',
-                                    cup: '超超超超大杯',
-                                    temp: '正常冰',
-                                    sugar: '不另外加糖'
-                                }
+                            } catch (err) {
+                                console.log(input, 'input 解析错误------------------------')
                             }
-                        })
+                        }
 
                         if (script_url && this.cardId) {
                             // 场景1,cdn方式
