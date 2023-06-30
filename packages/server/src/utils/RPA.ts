@@ -131,24 +131,26 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('description----------11111111', descriptionForModel, this.cardId, script_url, home_url)
+                        console.log('descriptionForModel----------11111111', descriptionForModel, this.cardId, script_url, home_url)
 
-                        console.log('input============22222222', typeof input, JSON.parse(input), '\n\n')
-
-                        console.log('description----------11111111', descriptionForModel)
+                        console.log('input============22222222', typeof input, input, '\n\n')
 
                         if (script_url && this.cardId) {
-                            const cardJson = {
-                                type: 'card',
-                                cardId: this.cardId,
-                                cardData: {
-                                    script_url: script_url,
-                                    app_url: home_url,
-                                    home_url,
-                                    inputs: JSON.parse(input)
+                            try {
+                                const cardJson = {
+                                    type: 'card',
+                                    cardId: this.cardId,
+                                    cardData: {
+                                        script_url: script_url,
+                                        app_url: home_url,
+                                        home_url,
+                                        inputs: JSON.parse(input)
+                                    }
                                 }
+                                return JSON.stringify(cardJson)
+                            } catch (err) {
+                                console.log(input, 'input 解析错误------------------------')
                             }
-                            return JSON.stringify(cardJson)
                         }
 
                         const cardId = '16db934a-dc09-4e51-8725-88a38e206916.schema';
