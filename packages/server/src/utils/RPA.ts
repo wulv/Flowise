@@ -30,10 +30,10 @@ export const buildTool = (manifest: IManifest) => {
                     return `${key}： ${description}, 类型为${type}, 默认值为：${example}`
                 }).join('\n')
 
-                descriptionForModel = ability?.ability_for_model?.description + `。input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
-                inputStr + '\n' + 
-                `。以上每个参数均为必须，如果未从user's input中获取到，则使用默认值。` +
-                '最后将object通过JSON.stringify处理后，作为 input 返回。'
+                descriptionForModel = ability?.ability_for_model?.description + 
+                `。需要返回的结果是一个 object，object 的每个 key 都从 user's input 分析，如果不存在，则使用默认值。以下为每个 key 的释义、类型、默认值：\n` + 
+                inputStr + '\n' +
+                '最后将 object 通过 JSON.stringify 处理后，作为 input 返回。'
             })
         }
     } catch (err) {
@@ -131,9 +131,11 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('descriptionForModel----------11111111', descriptionForModel, this.cardId, script_url, home_url)
-
-                        console.log('input============22222222', typeof input, input, '\n\n')
+                        console.log('descriptionForModel==========\n', descriptionForModel, '\n')
+                        console.log('cardId=======================\n', this.cardId, '\n')
+                        console.log('script_url===================\n', script_url, '\n')
+                        console.log('home_url=====================\n', home_url, '\n')
+                        console.log('input========================\n', typeof input, input, '\n')
 
                         if (script_url && this.cardId) {
                             try {
