@@ -89,9 +89,6 @@ export const buildTool = (manifest: IManifest) => {
                     // @ts-ignore
                     this.webhook = manifest.api_for_framework?.webhook_url as string
                     this.returnDirect = true
-
-                    console.log(this.description, script_url, Boolean(this.cardJson), 'this.description-------======---')
-
                 }
 
                 _getCardId(fields: any, manifest: any) {
@@ -131,11 +128,11 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('descriptionForModel==========\n', descriptionForModel, '\n')
-                        console.log('cardId=======================\n', this.cardId, '\n')
-                        console.log('script_url===================\n', script_url, '\n')
-                        console.log('home_url=====================\n', home_url, '\n')
-                        console.log('input========================\n', typeof input, input, '\n')
+                        console.log('descriptionForModel====', descriptionForModel, '\n')
+                        console.log('cardId====', this.cardId, '\n')
+                        console.log('script_url====', script_url, '\n')
+                        console.log('home_url====', home_url, '\n')
+                        console.log('input====', typeof input, input, '\n')
 
                         if (script_url && this.cardId) {
                             try {
