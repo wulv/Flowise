@@ -193,7 +193,7 @@ export class App {
 
         // Get all chatflows
         this.app.get('/api/v1/chatflows', async (req: Request, res: Response) => {
-            const appId = req.params.appId
+            const appId = req?.query?.appId as string;
             console.log('========', '/api/v1/chatflows', appId)
             if (appId) {
                 const chatflows: IChatFlow[] = await this.AppDataSource.getRepository(ChatFlow).findBy({
