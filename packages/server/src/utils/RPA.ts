@@ -31,12 +31,12 @@ export const buildTool = (manifest: IManifest) => {
                 }).join('\n')
 
                 descriptionForModel = ability?.ability_for_model?.description +
-                `你需要做四件事，` +
+                `你需要做四件事：\n` +
                 `第一件事：请你根据以下参数描述定义一个 object：\n` + 
                 inputStr + `\n` +
-                `第二件事：如果可以从 user's input 内容中解析到 object 中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
-                `第三件事：请你检查 object 中的每个参数值不为空，如果参数值为空字符串，请使用参数描述中的值替换。` +
-                '最后将object通过JSON.stringify处理后，作为 input 返回。'
+                `\n第二件事：如果可以从 user's input 内容中解析到 object 中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
+                `\n第三件事：请你检查 object 中的每个参数值不为空，如果参数值为空字符串，请使用参数描述中的值替换。` +
+                '\n最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
         /**
@@ -143,7 +143,7 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('descriptionForModel====', descriptionForModel, '\n')
+                        console.log('descriptionForModel====\n', descriptionForModel, 'descriptionForModel====\n')
                         console.log('cardId====', this.cardId, '\n')
                         console.log('script_url====', script_url, '\n')
                         console.log('home_url====', home_url, '\n')
