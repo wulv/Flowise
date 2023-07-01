@@ -16,8 +16,12 @@ export const buildTool = (manifest: IManifest) => {
     try {
         // @ts-ignore
         if (manifest.abilities) {
+
+            descriptionForModel += `我具备以下几个能力，请你依据 user's input 的内容，判断我应该使用哪个能力，请你注意，你只能选择其中的一个能力，不能同时使用多个能力。`
+            descriptionForModel += `现在我将分别介绍每个能力及其使用方法，你可以依据这些信息，选择其中一个能力。`
+            
             // @ts-ignore
-            Object.keys(manifest.abilities).forEach((key) => {
+            Object.keys(manifest.abilities).forEach((key, index) => {
                 // @ts-ignore
                 const ability = manifest?.abilities[key];
                 properties = ability?.ability_for_model?.input_param?.properties
@@ -35,15 +39,17 @@ export const buildTool = (manifest: IManifest) => {
                     return `如果object中参数${key}的值是空字符串或空，则将object中参数${key}赋值为${obj.example}，`
                 }).join('')
 
-                descriptionForModel = ability?.ability_for_model?.description +
-                `你需要做以下事情：` +
+                descriptionForModel = `/////能力${index}，能力描述：` + ability?.ability_for_model?.description +
+                `\n你需要做以下事情：` +
                 `\n第一件事：请你根据以下参数描述定义一个object：\n` + 
                 inputStr + `\n` +
                 `\n第二件事：如果可以从 user's input 内容中解析到BIG中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
                 `\n第三件事：请你检查object中的每个参数值，必须确保每个参数的值不是空字符串或空，` + emptyStr +
-                '\n最后将object通过JSON.stringify处理后，作为 input 返回。'
+                '\n最后将object通过JSON.stringify处理后，作为 input 返回。/////'
             })
+            descriptionForModel += `请你挑选出要使用的一个能力，并依据其说明，返回 input`
         }
+
         /**
          * 我具备以下几个能力，请你依据 user's input 的内容，判断我应该使用哪个能力，请你注意，你只能选择其中的一个能力，不能同时使用多个能力。
          * 现在我将分别介绍每个能力及其使用方法，你可以依据这些信息，选择其中一个能力。
@@ -54,7 +60,7 @@ export const buildTool = (manifest: IManifest) => {
          * ///
          * 能力3：{{ability2}}，{{description}}
          * ///
-         * 请你挑选出要使用的能力，并依据其说明，将你得到的 object 通过 JSON.stringify 处理后输出。
+         * 请你挑选出要使用的一个能力，并依据其说明，将你得到的 object 通过 JSON.stringify 处理后输出。
          */
     } catch (err) {
         console.log(err, 'err----------')
