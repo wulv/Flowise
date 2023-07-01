@@ -34,7 +34,7 @@ export const buildTool = (manifest: IManifest) => {
                 `你需要做三件事，` +
                 `第一件事：请你根据以下参数描述定义一个 object：\n` + 
                 inputStr + `\n` +
-                `第二件事：从 user's input 内容中分析是否存在 object 中每个参数所对应的描述的内容，则将内容替换为 user's input 中的内容。请注意：必须确保内容不为空才可以替换。` +
+                `第二件事：如果可以从 user's input 内容中解析到 object 中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
                 '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
