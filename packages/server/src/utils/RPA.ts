@@ -31,11 +31,11 @@ export const buildTool = (manifest: IManifest) => {
                 }).join('\n')
 
                 descriptionForModel = ability?.ability_for_model?.description +
-                `你需要做三件事，` +
+                `你需要做两件事，` +
                 `第一件事：请你根据以下参数描述定义一个 object：\n` + 
                 inputStr + `\n` +
-                `第二件事：从 user's input 内容中分析是否存在 object 中每个参数所对应的描述的内容，如果存在，则将内容替换为 user's input 中的内容。` +
-                '最后将object通过JSON.stringify处理后，作为 input 返回。'
+                // `第二件事：从 user's input 内容中分析是否存在 object 中每个参数所对应的描述的内容，如果存在，则将内容替换为 user's input 中的内容。` +
+                '第二件事：将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
         /**
