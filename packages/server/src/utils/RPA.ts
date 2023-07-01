@@ -32,7 +32,7 @@ export const buildTool = (manifest: IManifest) => {
 
                 const emptyStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
-                    return `如果参数 ${key} 的值如果是""，则将参数${key}赋值为${obj.example}，`
+                    return `如果参数 ${key} 的值如果是空字符串或空，则将BIG中参数${key}赋值为${obj.example}，`
                 }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description +
@@ -40,7 +40,7 @@ export const buildTool = (manifest: IManifest) => {
                 `\n第一件事：请你根据以下参数描述定义一个名为BIG的javascript中的对象：\n` + 
                 inputStr + `\n` +
                 `\n第二件事：如果可以从 user's input 内容中解析到BIG中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
-                `\n第三件事：请你检查BIG中的每个参数值，必须确保每个参数的值不是""，` + emptyStr +
+                `\n第三件事：请你检查BIG中的每个参数值，必须确保每个参数的值不是空字符串或空，` + emptyStr +
                 '\n最后将BIG通过JSON.stringify处理后，作为 input 返回。'
             })
         }
