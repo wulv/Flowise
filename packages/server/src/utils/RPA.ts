@@ -39,7 +39,7 @@ export const buildTool = (manifest: IManifest) => {
                     return `如果object中参数${key}的值是空字符串或空，则将object中参数${key}赋值为${obj.example}，`
                 }).join('')
 
-                descriptionForModel = `/////能力${index}，能力描述：` + ability?.ability_for_model?.description +
+                descriptionForModel += `/////能力${index}，能力描述：` + ability?.ability_for_model?.description +
                 `\n你需要做以下事情：` +
                 `\n第一件事：请你根据以下参数描述定义一个object：\n` + 
                 inputStr + `\n` +
