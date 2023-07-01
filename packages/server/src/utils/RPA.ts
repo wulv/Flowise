@@ -32,8 +32,8 @@ export const buildTool = (manifest: IManifest) => {
 
                 const emptyStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
-                    return `${key}为空时,使用··${obj.example}··替换，`
-                }).join('\n')
+                    return `${key}为空字符串时,使用··${obj.example}··替换，`
+                }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description +
                 `你需要做四件事：\n` +
