@@ -32,7 +32,7 @@ export const buildTool = (manifest: IManifest) => {
 
                 const emptyStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
-                    return `如果参数 ${key} 的值如果是空字符串或空，则将BIG中参数${key}赋值为${obj.example}，`
+                    return `如果BIG中参数0${key}的值是空字符串或空，则将BIG中参数${key}赋值为${obj.example}，`
                 }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description +
