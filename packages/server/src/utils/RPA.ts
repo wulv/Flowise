@@ -27,15 +27,29 @@ export const buildTool = (manifest: IManifest) => {
                 const inputStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
                     const { description, type, example } = obj
-                    return `参数${index}：${key}, ${description}, 类型为${type}, 默认值：${example}`
+                    return `${key}：${description}, 类型为 ${type}, 值为${example}`
                 }).join('\n')
 
-                descriptionForModel = ability?.ability_for_model?.description + `input需要从user's input分析，得到一个 object ， object中的每个 key 分别为：\n` + 
-                inputStr + 
-                `。\n 所有的参数必须有值，不允许为空或者空字符串。` +
+                descriptionForModel = ability?.ability_for_model?.description +
+                `你需要做三件事，` +
+                `第一件事：请你根据以下参数描述定义一个 object：\n` + 
+                inputStr + `\n` +
+                `第二件事：从 user's input 内容中分析是否存在 object 中每个参数所对应的描述的内容，如果存在，则将内容替换为 user's input 中的内容。` +
                 '最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
+        /**
+         * 我具备以下几个能力，请你依据 user's input 的内容，判断我应该使用哪个能力，请你注意，你只能选择其中的一个能力，不能同时使用多个能力。
+         * 现在我将分别介绍每个能力及其使用方法，你可以依据这些信息，选择其中一个能力。
+         * ///
+         * 能力1：{{ability1}}，{{description}}
+         * ///
+         * 能力2：{{ability2}}，{{description}}
+         * ///
+         * 能力3：{{ability2}}，{{description}}
+         * ///
+         * 请你挑选出要使用的能力，并依据其说明，将你得到的 object 通过 JSON.stringify 处理后输出。
+         */
     } catch (err) {
         console.log(err, 'err----------')
     }
@@ -230,6 +244,7 @@ export const buildTool = (manifest: IManifest) => {
                 }
             }
             const tool = new RPATool({
+                // 搭建页面插件表单填写的参数
                 cardId: nodeData?.inputs?.cardId || ''
             })
     

@@ -202,7 +202,7 @@ export const buildLangchain = async (
         nodeQueue.push({ nodeId: startingNodeIds[i], depth: 0 })
         exploredNode[startingNodeIds[i]] = { remainingLoop: maxLoop, lastSeenDepth: 0 }
     }
-
+    
     while (nodeQueue.length) {
         const { nodeId, depth } = nodeQueue.shift() as INodeQueue
 
@@ -283,7 +283,7 @@ export const buildLangchain = async (
             }
         }
     }
-    
+
     return flowNodes
 }
 
