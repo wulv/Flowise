@@ -32,7 +32,7 @@ export const buildTool = (manifest: IManifest) => {
 
                 const emptyStr = Object.keys(ability.ability_for_model.input_param).map((key, index) => {
                     const obj = ability.ability_for_model.input_param[key]
-                    return `object 中的参数 ${key} 为空字符串时,使用··${obj.example}··替换，`
+                    return `检查 object 中的参数 ${key} 是否为空字符串，如果是，则将 ${key}赋值为${obj.example}，`
                 }).join('')
 
                 descriptionForModel = ability?.ability_for_model?.description +
@@ -40,7 +40,7 @@ export const buildTool = (manifest: IManifest) => {
                 `\n第一件事：请你根据以下参数描述定义一个 object：\n` + 
                 inputStr + `\n` +
                 `\n第二件事：如果可以从 user's input 内容中解析到 object 中参数所对应的内容，则将内容替换为 user's input 中的内容。` +
-                `\n第三件事：请你检查 object 中的每个参数值，务必确保参数值是一个非空值，如果某个参数为空或者空字符串，则将这个参数删除。` +
+                `\n第三件事：请你检查 object 中的每个参数值，` + emptyStr +
                 '\n最后将object通过JSON.stringify处理后，作为 input 返回。'
             })
         }
