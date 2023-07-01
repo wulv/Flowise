@@ -191,6 +191,8 @@ export const buildLangchain = async (
 ) => {
     const flowNodes = cloneDeep(reactFlowNodes)
 
+    console.log('\nflowNodes', flowNodes)
+
     // Create a Queue and add our initial node in it
     const nodeQueue = [] as INodeQueue[]
     const exploredNode = {} as IExploredNode
