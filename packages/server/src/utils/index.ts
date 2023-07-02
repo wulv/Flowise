@@ -207,7 +207,7 @@ export const buildLangchain = async (
     //     //
     // })
 
-    console.log('\nflowNodes', flowNodes)
+    // console.log('\nflowNodes', flowNodes)
 
     // Create a Queue and add our initial node in it
     const nodeQueue = [] as INodeQueue[]
@@ -241,7 +241,7 @@ export const buildLangchain = async (
                     newNodeInstance = buildOpenAPITool(manifest)
                 } else if (+manifest.type === 3) {
                     newNodeInstance = buildJSAPITool(manifest)
-                } else if (manifest.name_for_human === '迟山testORK插件') {
+                } else if (reactFlowNode.data.name === '迟山testORK插件') {
                     newNodeInstance = buildTestTool(manifest)
                 } else if (manifest.abilities) {
                     newNodeInstance = BuildRPATool(manifest)

@@ -1148,7 +1148,7 @@ export class App {
                     const constructedObj = constructGraphs(nodes, edges, true)
                     const nonDirectedGraph = constructedObj.graph
                     const { startingNodeIds, depthQueue } = getStartingNodes(nonDirectedGraph, endingNodeId)
-                    console.log('start reactFlowNodes', startingNodeIds, '\n', JSON.stringify(depthQueue), '\n', JSON.stringify(graph))
+                    // console.log('start reactFlowNodes', startingNodeIds, '\n', JSON.stringify(depthQueue), '\n', JSON.stringify(graph))
                     /*** BFS to traverse from Starting Nodes to Ending Node ***/
                     const reactFlowNodes = await buildLangchain(
                         startingNodeIds,
@@ -1160,7 +1160,7 @@ export class App {
                         chatId,
                         incomingInput?.overrideConfig
                     )
-                    console.log('buildLangchain result', JSON.stringify(reactFlowNodes))
+                    // console.log('buildLangchain result', JSON.stringify(reactFlowNodes))
 
                     const nodeToExecute = reactFlowNodes.find((node: IReactFlowNode) => node.id === endingNodeId)
                     if (!nodeToExecute) return res.status(404).send(`Node ${endingNodeId} not found`)
