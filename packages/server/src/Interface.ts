@@ -77,6 +77,7 @@ export interface IManifest {
   type: number;
   api_for_model: Apiformodel;
   api_for_framework: Apiforframework;
+  abilities: any;
 }
 
 interface Apiforframework {

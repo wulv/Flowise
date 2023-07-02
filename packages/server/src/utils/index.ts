@@ -21,6 +21,7 @@ import { buildTool as BuildRPATool } from './RPA';
 import { buildTool as buildAppTool } from './App';
 import { buildTool as buildOpenAPITool } from './OpenAPI';
 import { buildTool as buildJSAPITool } from './JSAPI';
+import { buildTool as buildTestTool } from './test';
 
 const QUESTION_VAR_PREFIX = 'question'
 
@@ -191,6 +192,21 @@ export const buildLangchain = async (
 ) => {
     const flowNodes = cloneDeep(reactFlowNodes)
 
+    // // 找到多 ability 的
+    // const multiAbilityNodes = flowNodes.filter((node) => node?.data?.manifest?.abilities)
+
+    // multiAbilityNodes.forEach((node) => {
+    //     // 在startingNodeIds中删掉当前节点
+    //     // 在reactFlowNodes中删掉当前节点
+    //     // 在graph中删掉当前节点
+    //     const manifest = cloneDeep(node.data.manifest)
+    //     const abilities = node.data.manifest?.abilities;
+    //     Object.keys(abilities).forEach((abilityKey) => {
+    //         // abilities[abilityKey]
+    //     })
+    //     //
+    // })
+
     console.log('\nflowNodes', flowNodes)
 
     // Create a Queue and add our initial node in it
@@ -225,7 +241,8 @@ export const buildLangchain = async (
                     newNodeInstance = buildOpenAPITool(manifest)
                 } else if (+manifest.type === 3) {
                     newNodeInstance = buildJSAPITool(manifest)
-                    // @ts-ignore
+                } else if (manifest.name_for_human === '迟山testORK插件') {
+                    newNodeInstance = buildTestTool(manifest)
                 } else if (manifest.abilities) {
                     newNodeInstance = BuildRPATool(manifest)
                 }
