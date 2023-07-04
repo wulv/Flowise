@@ -750,8 +750,10 @@ export class App {
                     ]
                     const chatmessage = this.AppDataSource.getRepository(ChatMessage).create(newChatMessage)
                     await this.AppDataSource.getRepository(ChatMessage).save(chatmessage)
+                    console.log('userMsg', userMsg)
                     const res = await chatQuery({ question: userMsg, history: [], userId: msg.senderStaffId }, id)
                     apiContent = res
+                    console.log('apiContent', apiContent)
                     try {
                         const result = JSON.parse(apiContent)
                         if (result?.type === 'card') {
