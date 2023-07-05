@@ -120,6 +120,7 @@ export class App {
         // Get all component nodes
         this.app.get('/api/v1/nodes', async (req: Request, res: Response) => {
             const returnData = []
+            console.log('returnData ==========', this.nodesPool.componentNodes);
             for (const nodeName in this.nodesPool.componentNodes) {
                 const clonedNode = cloneDeep(this.nodesPool.componentNodes[nodeName])
                 returnData.push(clonedNode)
@@ -131,6 +132,8 @@ export class App {
             //     outputs: item.outputs ? JSON.parse(item.outputs) : undefined,
             //     baseClasses: JSON.parse(item.baseClasses)
             // }))
+            console.log('returnData ==========', returnData);
+            
             return res.json(returnData)
         })
 
