@@ -2,7 +2,7 @@ import { INode, INodeData, INodeParams } from '../../../src/Interface'
 import { getBaseClasses } from '../../../src/utils'
 import { ChatOpenAI, OpenAIChatInput } from 'langchain/chat_models/openai'
 // @ts-ignore
-import { MptModel } from './MptModel'
+import { MptModel } from '../../../src/MptModel'
 
 class Mpt_ChatModels implements INode {
     label: string

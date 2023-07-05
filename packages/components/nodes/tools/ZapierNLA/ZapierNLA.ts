@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ZapierNLAWrapper, ZapierNLAWrapperParams } from 'langchain/tools'
 import { INode, INodeData, INodeParams } from '../../../src/Interface'
 import { ZapierToolKit } from 'langchain/agents'

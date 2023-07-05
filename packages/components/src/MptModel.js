@@ -13,7 +13,7 @@ import { BaseChatModel } from "langchain/chat_models/base";
  * even if not explicitly available on this class.
  *
  */
-export class ChatAnthropic extends BaseChatModel {
+export class MptModel extends BaseChatModel {
     get callKeys() {
         return ["options"];
     }
@@ -44,40 +44,6 @@ export class ChatAnthropic extends BaseChatModel {
         this.maxTokens = fields?.maxTokens ?? this.maxTokensToSample;
         this.streaming = fields?.streaming ?? false;
     }
-    /**
-     * Get the parameters used to invoke the model
-     */
-    // invocationParams() {
-    //   return {
-    //       model: this.modelName,
-    //       temperature: this.temperature,
-    //       maxTokens: this.maxTokens,
-    //   };
-    // }
-    // /** @ignore */
-    // _identifyingParams() {
-    //     return {
-    //         model_name: this.modelName,
-    //         ...this.invocationParams(),
-    //     };
-    // }
-    // /**
-    //  * Get the identifying parameters for the model
-    //  */
-    // identifyingParams() {
-    //     return {
-    //         model_name: this.modelName,
-    //         ...this.invocationParams(),
-    //     };
-    // }
-    // formatMessagesAsPrompt(messages) {
-    //     return (messages
-    //         .map((message) => {
-    //         const messagePrompt = getAnthropicPromptFromMessage(message._getType());
-    //         return `${messagePrompt} ${message.text}`;
-    //     })
-    //         .join("") + AI_PROMPT);
-    // }
     /** @ignore */
     async _generate(messages, options, runManager) {
         // const params = this.invocationParams();
@@ -101,29 +67,6 @@ export class ChatAnthropic extends BaseChatModel {
 
         return '{"name":"加浓美式","temp":"冰","sugar":"三分糖","cup":"大杯"}';
     }
-    /** @ignore */
-    // async completionWithRetry(request, options) {
-    //     let makeCompletionRequest;
-    //     if (!this.batchClient) {
-    //         const options = this.apiUrl ? { apiUrl: this.apiUrl } : undefined;
-    //         this.batchClient = new AnthropicApi(this.apiKey, options);
-    //     }
-    //     makeCompletionRequest = async () => this.batchClient
-    //         .complete(request, {
-    //         signal: options.signal,
-    //     })
-    //         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //     .catch((e) => {
-    //         console.log(e);
-    //         // Anthropic doesn't actually throw JavaScript error objects at the moment.
-    //         // We convert the error so the async caller can recognize it correctly.
-    //         if (e?.type === "aborted") {
-    //             throw new Error(`${e.name}: ${e.message}`);
-    //         }
-    //         throw e;
-    //     });
-    //     return this.caller.call(makeCompletionRequest);
-    // }
     _llmType() {
         return "mpt";
     }

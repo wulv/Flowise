@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SystemChatMessage } from 'langchain/schema'
 import { INode, INodeData, INodeParams } from '../../../src/Interface'
 import { getBaseClasses } from '../../../src/utils'

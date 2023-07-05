@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ICommonObject, INode, INodeData, INodeParams } from '../../../src/Interface'
 import { initializeAgentExecutorWithOptions, AgentExecutor } from 'langchain/agents'
 import { Tool } from 'langchain/tools'
