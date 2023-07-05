@@ -16,8 +16,6 @@ export class NodesPool {
         const nodesPath = path.join(packagePath, 'dist', 'nodes')
         const nodeFiles = await this.getFiles(nodesPath)
 
-        console.log('==============================nodeFiles', nodeFiles);
-        
         return Promise.all(
             nodeFiles.map(async (file) => {
                 if (file.endsWith('.js')) {

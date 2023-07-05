@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { BaseChatModel } from "langchain/chat_models/base";
+import axios from 'axios';
 
 /**
  * Wrapper around Anthropic large language models.
