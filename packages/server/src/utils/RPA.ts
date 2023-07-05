@@ -148,7 +148,7 @@ export const buildTool = (manifest: IManifest) => {
                 /** @ignore */
                 async _call(input: string) {
                     try {
-                        console.log('descriptionForModel====\n', descriptionForModel, '\ndescriptionForModel====\n')
+                        // console.log('descriptionForModel====\n', descriptionForModel, '\ndescriptionForModel====\n')
                         console.log('cardId====', this.cardId, '\n')
                         console.log('script_url====', script_url, '\n')
                         console.log('home_url====', home_url, '\n')

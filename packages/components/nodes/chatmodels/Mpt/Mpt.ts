@@ -54,7 +54,7 @@ class Mpt_ChatModels implements INode {
                 name: 'inferenceUrl',
                 type: 'string',
                 optional: true,
-                default: 'https://pre-lippi-mpt-model-service.alibaba-inc.com/v1/chat/completions',
+                default: 'http://116.62.203.223:8090/v1/chat/completions',
                 additionalParams: true
             },
         ]

@@ -109,8 +109,6 @@ class ConversationalAgent_Agents implements INode {
         }
         const result = await executor.call({ input })
 
-        console.log('agentResult', result);
-
         return result?.output
     }
 }

@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { BaseChatModel } from "langchain/chat_models/base";
 import axios from 'axios';
+import { AIChatMessage } from 'langchain/schema';
+import { OpenAIApi, Configuration } from "openai";
 
 /**
  * Wrapper around Anthropic large language models.
@@ -17,7 +19,7 @@ import axios from 'axios';
  */
 export class MptModel extends BaseChatModel {
     get callKeys() {
-        return ["options"];
+        return ["stop", "signal", "timeout", "options"];
     }
     constructor(fields) {
         super(fields ?? {});
@@ -39,40 +41,141 @@ export class MptModel extends BaseChatModel {
             writable: true,
             value: "mpt-30b-chat"
         });
+        Object.defineProperty(this, "stop", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         // 基础参数        
         this.inferenceUrl = fields?.inferenceUrl;
         this.modelName = fields?.modelName ?? this.modelName;
         this.temperature = fields?.temperature ?? this.temperature;
         this.maxTokens = fields?.maxTokens ?? this.maxTokensToSample;
         this.streaming = fields?.streaming ?? false;
+        this.stop = fields?.stop;
     }
     /** @ignore */
     async _generate(messages, options, runManager) {
-        // const params = this.invocationParams();
-        console.log('\nmpt-------params', messages, options, runManager, '\n');
-        const res = await axios.post(this.inferenceUrl, {
-            "messages":[{"role":"system","content":"你是一个ai助理，你可以完成用户的指令，并避免产生幻觉，请用中文回答。"},{"content":"当用户需要点咖啡时使用。\n根据用户指令提取一下字段并输出\nname：咖啡名称，如标准美式、拿铁、馥芮白,  默认值为标准美式，注意，如果用户输入咖啡名为美式，请转换为标准美式，如果用户输入为加浓美式，则为加浓美式\ncup：咖啡杯型，如大杯、中杯、小杯,   默认值为大杯\nsugar：咖啡甜度，如不另外加糖、半糖、单份糖、标准甜、少甜、少少甜, 默认不另外加糖\ntemp：咖啡温度，如冰、热、去冰,  默认为冰\n\n输入：点一杯中杯拿铁\n输出：{name: '拿铁', temp: '冰', sugar: '不加糖', cup: '大杯'}\n\n输入：我要大杯冰美式，三分糖\n输出：{name: '标准美式', temp: '冰', sugar: '三分糖', cup: '大杯'}\n\n输入：小羊美式，不加糖，中杯热\n输出：{name: '小羊美式', temp: '热', sugar: '不另外加糖', cup: '中杯'}\n\n输入：来一杯大杯加浓美式，三分糖\n\n","role":"user"}],
-            "temperature":0.2,
-            "model":"mpt-30b-chat",
-            "top_p":0.9,
-            "stream":false,
-            "max_tokens":500
-        }, {
-            headers: {
-                contentType: 'application/json',
-                Host: 'pre-lippi-mpt-model-service.alibaba-inc.com',
-                authority: 'pre-lippi-mpt-model-service.alibaba-inc.com',
-                origin: 'https://ding.aliwork.com',
-                referer: 'https://ding.aliwork.com/'
+        console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
+        // const res = await axios.post(this.inferenceUrl, {
+        //     "messages":[{"role":"system","content": messages[0]?.text.replace(/\\n/g, '')},{"content": messages[1]?.text.replace(/\\n/g, ''),"role":"user"}],
+        //     "temperature":0.2,
+        //     "model":"mpt-30b-chat",
+        //     "top_p":0.9,
+        //     "stream":false,
+        //     "max_tokens":500
+        // }, {
+        //     headers: {
+        //         "accept": "*/*",
+        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+        //         "cache-control": "no-cache",
+        //         "content-type": "application/json",
+        //         "pragma": "no-cache",
+        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        //         "sec-ch-ua-mobile": "?0",
+        //         "sec-ch-ua-platform": "\"macOS\"",
+        //         "sec-fetch-dest": "empty",
+        //         "sec-fetch-mode": "cors",
+        //         "sec-fetch-site": "cross-site",
+        //         "Referer": "https://ding.aliwork.com/",
+        //         "Referrer-Policy": "strict-origin-when-cross-origin"
+        //     },
+        //     timeout: 10000
+        // }).catch(err => {
+        //     // console.log('err   模型请求错误', err);
+        // })
+        // console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
+
+        // await fetch("http://116.62.203.223:8090/v1/chat/completions", {
+        //     "headers": {
+        //         "accept": "*/*",
+        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+        //         "cache-control": "no-cache",
+        //         "content-type": "application/json",
+        //         "pragma": "no-cache",
+        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        //         "sec-ch-ua-mobile": "?0",
+        //         "sec-ch-ua-platform": "\"macOS\"",
+        //         "sec-fetch-dest": "empty",
+        //         "sec-fetch-mode": "cors",
+        //         "sec-fetch-site": "cross-site",
+        //         "Referer": "https://ding.aliwork.com/",
+        //         "Referrer-Policy": "strict-origin-when-cross-origin"
+        //     },
+        //     "body": `{"messages":[{"role":"system","content": ${messages[0]?.text}},{"content":${messages[1]?.text},"role":"user"}],"temperature":0.2,"model":"mpt-30b-chat","top_p":0.9,"stream":false,"max_tokens":500}`,
+        //     "method": "POST",
+        //     "timeout": 1,
+        //     }).then(res => res.json()).then(res => {
+        //         console.log(res, res?.choices?.[0]?.message)
+        //     }).catch(err => {
+        //         console.log(err)
+        //     });
+
+        const clientConfig = new Configuration({
+            basePath: 'http://116.62.203.223:8090/v1/chat/completions',
+            baseOptions: {
+                timeout: 5000,
             },
-            timeout: 10000
-        })
-        console.log('\nmpt-------success', res, '\n');
+        });
+        this.client = new OpenAIApi(clientConfig);
+        const axiosOptions = {
+            ...clientConfig.baseOptions,
+        };
+        await this.caller
+            .call(this.client.createChatCompletion.bind(this.client), {
+                messages: [{"role":"system","content": messages[0]?.text},{"content":messages[1]?.text,"role":"user"}],
+                temperature: 0.2,
+                model: "mpt-30b-chat",
+                topP: 0.9,
+                stream: false,
+                maxTokens: 500,
+            }, axiosOptions)
+            .then((res) => {
+                console.log('--------------------', res, res.data)
+            }).catch((err) => {
+                console.log('--------------------', err)
+            });
 
         return {
             generations: [{
-                text: '{"name":"加浓美式","temp":"冰","sugar":"三分糖","cup":"大杯"}'
-            }]
+                text: '{\n' +
+                '    "action": "瑞幸咖啡助手for钉钉",\n' +
+                '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
+                '}',
+                message: new AIChatMessage('{\n' +
+                '    "action": "瑞幸咖啡助手for钉钉",\n' +
+                '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
+                '}')
+            }],
+            llmOutput: { tokenUsage: {} } 
+        };
+    }
+    /**
+     * Get the parameters used to invoke the model
+     */
+       invocationParams() {
+        return {
+            model: this.modelName,
+            temperature: this.temperature,
+            stop: this.stop,
+            maxTokens: this.maxTokens,
+        };
+    }
+    /** @ignore */
+    _identifyingParams() {
+        return {
+            model_name: this.modelName,
+            ...this.invocationParams(),
+        };
+    }
+    /**
+     * Get the identifying parameters for the model
+     */
+    identifyingParams() {
+        return {
+            model_name: this.modelName,
+            ...this.invocationParams(),
         };
     }
     _llmType() {
