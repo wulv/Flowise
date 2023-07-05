@@ -60,6 +60,10 @@ export class MptModel extends BaseChatModel {
         }, {
             headers: {
                 contentType: 'application/json',
+                Host: 'pre-lippi-mpt-model-service.alibaba-inc.com',
+                authority: 'pre-lippi-mpt-model-service.alibaba-inc.com',
+                origin: 'https://ding.aliwork.com',
+                referer: 'https://ding.aliwork.com/'
             }
         }).then((res) => {
             console.log('\nmpt-------success', res, '\n');
