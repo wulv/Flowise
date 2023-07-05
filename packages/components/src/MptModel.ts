@@ -67,9 +67,11 @@ export class MptModel extends BaseChatModel {
             console.log('\nmpt-------fail', err, '\n');
         })
 
-        return [{
-            text: '{"name":"加浓美式","temp":"冰","sugar":"三分糖","cup":"大杯"}'
-        }];
+        return {
+            generations: [{
+                text: '{"name":"加浓美式","temp":"冰","sugar":"三分糖","cup":"大杯"}'
+            }]
+        };
     }
     _llmType() {
         return "mpt";
