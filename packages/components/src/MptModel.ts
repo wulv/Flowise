@@ -64,7 +64,8 @@ export class MptModel extends BaseChatModel {
                 authority: 'pre-lippi-mpt-model-service.alibaba-inc.com',
                 origin: 'https://ding.aliwork.com',
                 referer: 'https://ding.aliwork.com/'
-            }
+            },
+            timeout: 10000
         })
         console.log('\nmpt-------success', res, '\n');
 
