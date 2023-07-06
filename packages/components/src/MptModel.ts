@@ -58,10 +58,10 @@ export class MptModel extends BaseChatModel {
     /** @ignore */
     async _generate(messages, options, runManager) {
         // console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
-        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
-
+        // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
+        
         const res = await axios.post(this.inferenceUrl, {
-            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, ''),"role":"user"}],
+            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, '') + '-----------!!!BE ATTENTION: remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else!!!',"role":"user"}],
             "temperature":0.2,
             "model":"mpt-30b-chat",
             "top_p":0.9,
@@ -86,59 +86,7 @@ export class MptModel extends BaseChatModel {
         }).catch(err => {
             console.log('err   模型请求错误', err);
         })
-        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
-
-
-        // await fetch("http://116.62.203.223:8090/v1/chat/completions", {
-        //     "headers": {
-        //         "accept": "*/*",
-        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-        //         "cache-control": "no-cache",
-        //         "content-type": "application/json",
-        //         "pragma": "no-cache",
-        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-        //         "sec-ch-ua-mobile": "?0",
-        //         "sec-ch-ua-platform": "\"macOS\"",
-        //         "sec-fetch-dest": "empty",
-        //         "sec-fetch-mode": "cors",
-        //         "sec-fetch-site": "cross-site",
-        //         "Referer": "https://ding.aliwork.com/",
-        //         "Referrer-Policy": "strict-origin-when-cross-origin"
-        //     },
-        //     "body": `{"messages":[{"role":"system","content": ${messages[0]?.text.replace(/\n/g, '')}},{"content":${messages[1]?.text.replace(/\n/g, '')},"role":"user"}],"temperature":0.2,"model":"mpt-30b-chat","top_p":0.9,"stream":false,"max_tokens":500}`,
-        //     "method": "POST",
-        //     }).then(res => res.json()).then(res => {
-        //         console.log(res, res?.choices?.[0]?.message)
-        //     }).catch(err => {
-        //         console.log(err)
-        //     });
-
-
-        // const clientConfig = new Configuration({
-        //     basePath: 'http://116.62.203.223:8090/v1/chat/completions',
-        //     baseOptions: {
-        //         timeout: 5000,
-        //     },
-        // });
-        // this.client = new OpenAIApi(clientConfig);
-        // const axiosOptions = {
-        //     ...clientConfig.baseOptions,
-        // };
-        // await this.caller
-        //     .call(this.client.createChatCompletion.bind(this.client), {
-        //         messages: [{"role":"system","content": messages[0]?.text},{"content":messages[1]?.text,"role":"user"}],
-        //         temperature: 0.2,
-        //         model: "mpt-30b-chat",
-        //         topP: 0.9,
-        //         stream: false,
-        //         maxTokens: 500,
-        //     }, axiosOptions)
-        //     .then((res) => {
-        //         console.log('--------------------', res, res.data)
-        //     }).catch((err) => {
-        //         console.log('--------------------', err)
-        //     });
-
+        console.log('\nmpt-------success', res?.data?.choices?.[0]?.message, '\n');
         return {
             generations: [{
                 text: '{\n' +
