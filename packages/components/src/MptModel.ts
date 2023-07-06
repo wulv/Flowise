@@ -86,7 +86,7 @@ export class MptModel extends BaseChatModel {
         }).catch(err => {
             console.log('err   模型请求错误', err);
         })
-        console.log('\nmpt-------success', res?.data?.choices?.[0]?.message, '\n');
+        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
         return {
             generations: [{
                 text: '{\n' +
