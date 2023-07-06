@@ -57,35 +57,35 @@ export class MptModel extends BaseChatModel {
     }
     /** @ignore */
     async _generate(messages, options, runManager) {
-        console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
-        // const res = await axios.post(this.inferenceUrl, {
-        //     "messages":[{"role":"system","content": messages[0]?.text.replace(/\\n/g, '')},{"content": messages[1]?.text.replace(/\\n/g, ''),"role":"user"}],
-        //     "temperature":0.2,
-        //     "model":"mpt-30b-chat",
-        //     "top_p":0.9,
-        //     "stream":false,
-        //     "max_tokens":500
-        // }, {
-        //     headers: {
-        //         "accept": "*/*",
-        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-        //         "cache-control": "no-cache",
-        //         "content-type": "application/json",
-        //         "pragma": "no-cache",
-        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-        //         "sec-ch-ua-mobile": "?0",
-        //         "sec-ch-ua-platform": "\"macOS\"",
-        //         "sec-fetch-dest": "empty",
-        //         "sec-fetch-mode": "cors",
-        //         "sec-fetch-site": "cross-site",
-        //         "Referer": "https://ding.aliwork.com/",
-        //         "Referrer-Policy": "strict-origin-when-cross-origin"
-        //     },
-        //     timeout: 10000
-        // }).catch(err => {
-        //     // console.log('err   模型请求错误', err);
-        // })
-        // console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
+        // console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
+        const res = await axios.post(this.inferenceUrl, {
+            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, ''),"role":"user"}],
+            "temperature":0.2,
+            "model":"mpt-30b-chat",
+            "top_p":0.9,
+            "stream":false,
+            "max_tokens":500
+        }, {
+            headers: {
+                "accept": "*/*",
+                "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+                "cache-control": "no-cache",
+                "content-type": "application/json",
+                "pragma": "no-cache",
+                "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"macOS\"",
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "cross-site",
+                "Referer": "https://ding.aliwork.com/",
+                "Referrer-Policy": "strict-origin-when-cross-origin"
+            },
+            timeout: 10000
+        }).catch(err => {
+            console.log('err   模型请求错误', err);
+        })
+        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
 
         // await fetch("http://116.62.203.223:8090/v1/chat/completions", {
         //     "headers": {
@@ -112,8 +112,8 @@ export class MptModel extends BaseChatModel {
         //         console.log(err)
         //     });
 
-        console.log(messages[1]?.text.replace(/\\n/g, ''), '\n');
-        console.log('"TOOLS------Assistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:瑞幸咖啡助手for钉钉: 需要下单咖啡时使用你需要做以下事情：第一件事：请你根据以下参数描述定义一个object：name：咖啡名称，如标准美式、拿铁、馥芮白, 类型为 string, 值为标准美式cup：咖啡杯型，如大杯、中杯、小杯, 类型为 string, 值为大杯sugar：咖啡甜度，如不另外加糖、半糖、单份糖, 类型为 string, 值为半糖temp：咖啡温度，如冰、热, 类型为 string, 值为冰第二件事：如果可以从 user\'s input 内容中解析到object中参数所对应的内容，则将内容替换为 user\'s input 中的内容。第三件事：请你检查object中的每个参数值，必须确保每个参数的值不是空字符串或空，如果object中参数name的值是空字符串或空，则将object中参数name赋值为标准美式，如果object中参数cup的值是空字符串或空，则将object中参数cup赋值为大杯，如果object中参数sugar的值是空字符串或空，则将object中参数sugar赋值为半糖，如果object中参数temp的值是空字符串或空，则将object中参数temp赋值为冰，最后将object通过JSON.stringify处理后，作为 input 返回。RESPONSE FORMAT INSTRUCTIONS----------------------------Output a JSON markdown code snippet containing a valid JSON object in one of two formats:**Option 1:**Use this if you want the human to use a tool.Markdown code snippet formatted in the following schema:```json{    \\"action\\": string, // The action to take. Must be one of [瑞幸咖啡助手for钉钉]    \\"action_input\\": string // The input to the action. May be a stringified object.}```**Option #2:**Use this if you want to respond directly and conversationally to the human. Markdown code snippet formatted in the following schema:```json{    \\"action\\": \\"Final Answer\\",    \\"action_input\\": string // You should put what you want to return to use here and make sure to use valid json newline characters.}```For both options, remember to always include the surrounding markdown code snippet delimiters (begin with \\"```json\\" and end with \\"```\\")!USER\'S INPUT--------------------Here is the user\'s input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):冰美式"', '\n');
+        // console.log(messages[1]?.text.replace(/\\n/g, ''), '\n');
+        // console.log('"TOOLS------Assistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:瑞幸咖啡助手for钉钉: 需要下单咖啡时使用你需要做以下事情：第一件事：请你根据以下参数描述定义一个object：name：咖啡名称，如标准美式、拿铁、馥芮白, 类型为 string, 值为标准美式cup：咖啡杯型，如大杯、中杯、小杯, 类型为 string, 值为大杯sugar：咖啡甜度，如不另外加糖、半糖、单份糖, 类型为 string, 值为半糖temp：咖啡温度，如冰、热, 类型为 string, 值为冰第二件事：如果可以从 user\'s input 内容中解析到object中参数所对应的内容，则将内容替换为 user\'s input 中的内容。第三件事：请你检查object中的每个参数值，必须确保每个参数的值不是空字符串或空，如果object中参数name的值是空字符串或空，则将object中参数name赋值为标准美式，如果object中参数cup的值是空字符串或空，则将object中参数cup赋值为大杯，如果object中参数sugar的值是空字符串或空，则将object中参数sugar赋值为半糖，如果object中参数temp的值是空字符串或空，则将object中参数temp赋值为冰，最后将object通过JSON.stringify处理后，作为 input 返回。RESPONSE FORMAT INSTRUCTIONS----------------------------Output a JSON markdown code snippet containing a valid JSON object in one of two formats:**Option 1:**Use this if you want the human to use a tool.Markdown code snippet formatted in the following schema:```json{    \\"action\\": string, // The action to take. Must be one of [瑞幸咖啡助手for钉钉]    \\"action_input\\": string // The input to the action. May be a stringified object.}```**Option #2:**Use this if you want to respond directly and conversationally to the human. Markdown code snippet formatted in the following schema:```json{    \\"action\\": \\"Final Answer\\",    \\"action_input\\": string // You should put what you want to return to use here and make sure to use valid json newline characters.}```For both options, remember to always include the surrounding markdown code snippet delimiters (begin with \\"```json\\" and end with \\"```\\")!USER\'S INPUT--------------------Here is the user\'s input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):冰美式"', '\n');
         // await fetch("http://116.62.203.223:8090/v1/chat/completions", {
         //     "headers": {
         //         "accept": "*/*",
