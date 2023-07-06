@@ -86,15 +86,16 @@ export class MptModel extends BaseChatModel {
         }).catch(err => {
             console.log('err   模型请求错误', err);
         })
-        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message.content.match(/`{2}([^`]+)`{2}/g)[0], '\n');
+        const cnt = res?.data?.choices?.[0]?.message.content.match(/(?<=`{3})[^`]+(?=`{3})/g)[0].replace('json', '');
+        console.log('\nmpt-------success', res, cnt, '\n');
         console.log('{\n' +
         '    "action": "瑞幸咖啡助手for钉钉",\n' +
         '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
         '}')
         return {
             generations: [{
-                text: res?.data?.choices?.[0]?.message.match(/`{2}([^`]+)`{2}/g)[0],
-                message: new AIChatMessage(res?.data?.choices?.[0]?.message.content.match(/`{2}([^`]+)`{2}/g)[0])
+                text: cnt,
+                message: new AIChatMessage(cnt)
             }],
             llmOutput: { tokenUsage: {} } 
         };
