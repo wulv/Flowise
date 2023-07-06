@@ -61,7 +61,7 @@ export class MptModel extends BaseChatModel {
         // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
         
         const res = await axios.post(this.inferenceUrl, {
-            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, '') + '-----------!!!BE ATTENTION: remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else!!!',"role":"user"}],
+            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, '') + '-----------!!!BE ATTENTION: you must to respond with a markdown code snippet of a json blob with a single action, and NOTHING else!!!',"role":"user"}],
             "temperature":0.2,
             "model":"mpt-30b-chat",
             "top_p":0.9,
@@ -86,17 +86,15 @@ export class MptModel extends BaseChatModel {
         }).catch(err => {
             console.log('err   模型请求错误', err);
         })
-        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
+        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message.match(/`{2}([^`]+)`{2}/g)[0], '\n');
+        console.log('{\n' +
+        '    "action": "瑞幸咖啡助手for钉钉",\n' +
+        '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
+        '}')
         return {
             generations: [{
-                text: '{\n' +
-                '    "action": "瑞幸咖啡助手for钉钉",\n' +
-                '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
-                '}',
-                message: new AIChatMessage('{\n' +
-                '    "action": "瑞幸咖啡助手for钉钉",\n' +
-                '    "action_input": "{\\"name\\":\\"标准美式\\",\\"cup\\":\\"大杯\\",\\"sugar\\":\\"半糖\\",\\"temp\\":\\"冰\\"}"\n' +
-                '}')
+                text: res?.data?.choices?.[0]?.message.match(/`{2}([^`]+)`{2}/g)[0],
+                message: new AIChatMessage(res?.data?.choices?.[0]?.message.match(/`{2}([^`]+)`{2}/g)[0])
             }],
             llmOutput: { tokenUsage: {} } 
         };
