@@ -58,39 +58,17 @@ export class MptModel extends BaseChatModel {
     /** @ignore */
     async _generate(messages, options, runManager) {
         // console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
-        // const res = await axios.post(this.inferenceUrl, {
-        //     "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, ''),"role":"user"}],
-        //     "temperature":0.2,
-        //     "model":"mpt-30b-chat",
-        //     "top_p":0.9,
-        //     "stream":false,
-        //     "max_tokens":500
-        // }, {
-        //     headers: {
-        //         "accept": "*/*",
-        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-        //         "cache-control": "no-cache",
-        //         "content-type": "application/json",
-        //         "pragma": "no-cache",
-        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
-        //         "sec-ch-ua-mobile": "?0",
-        //         "sec-ch-ua-platform": "\"macOS\"",
-        //         "sec-fetch-dest": "empty",
-        //         "sec-fetch-mode": "cors",
-        //         "sec-fetch-site": "cross-site",
-        //         "Referer": "https://ding.aliwork.com/",
-        //         "Referrer-Policy": "strict-origin-when-cross-origin"
-        //     },
-        //     timeout: 10000
-        // }).catch(err => {
-        //     console.log('err   模型请求错误', err);
-        // })
-        // console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
-
         console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
 
-        await fetch("http://116.62.203.223:8090/v1/chat/completions", {
-            "headers": {
+        const res = await axios.post(this.inferenceUrl, {
+            "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, ''),"role":"user"}],
+            "temperature":0.2,
+            "model":"mpt-30b-chat",
+            "top_p":0.9,
+            "stream":false,
+            "max_tokens":500
+        }, {
+            headers: {
                 "accept": "*/*",
                 "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
                 "cache-control": "no-cache",
@@ -105,13 +83,35 @@ export class MptModel extends BaseChatModel {
                 "Referer": "https://ding.aliwork.com/",
                 "Referrer-Policy": "strict-origin-when-cross-origin"
             },
-            "body": `{"messages":[{"role":"system","content": ${messages[0]?.text.replace(/\n/g, '')}},{"content":${messages[1]?.text.replace(/\n/g, '')},"role":"user"}],"temperature":0.2,"model":"mpt-30b-chat","top_p":0.9,"stream":false,"max_tokens":500}`,
-            "method": "POST",
-            }).then(res => res.json()).then(res => {
-                console.log(res, res?.choices?.[0]?.message)
-            }).catch(err => {
-                console.log(err)
-            });
+        }).catch(err => {
+            console.log('err   模型请求错误', err);
+        })
+        console.log('\nmpt-------success', res, res?.data?.choices?.[0]?.message, '\n');
+
+
+        // await fetch("http://116.62.203.223:8090/v1/chat/completions", {
+        //     "headers": {
+        //         "accept": "*/*",
+        //         "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+        //         "cache-control": "no-cache",
+        //         "content-type": "application/json",
+        //         "pragma": "no-cache",
+        //         "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+        //         "sec-ch-ua-mobile": "?0",
+        //         "sec-ch-ua-platform": "\"macOS\"",
+        //         "sec-fetch-dest": "empty",
+        //         "sec-fetch-mode": "cors",
+        //         "sec-fetch-site": "cross-site",
+        //         "Referer": "https://ding.aliwork.com/",
+        //         "Referrer-Policy": "strict-origin-when-cross-origin"
+        //     },
+        //     "body": `{"messages":[{"role":"system","content": ${messages[0]?.text.replace(/\n/g, '')}},{"content":${messages[1]?.text.replace(/\n/g, '')},"role":"user"}],"temperature":0.2,"model":"mpt-30b-chat","top_p":0.9,"stream":false,"max_tokens":500}`,
+        //     "method": "POST",
+        //     }).then(res => res.json()).then(res => {
+        //         console.log(res, res?.choices?.[0]?.message)
+        //     }).catch(err => {
+        //         console.log(err)
+        //     });
 
 
         // const clientConfig = new Configuration({
