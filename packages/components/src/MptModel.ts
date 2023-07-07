@@ -86,7 +86,7 @@ export class MptModel extends BaseChatModel {
         }).catch(err => {
             console.log('err   模型请求错误', err);
         })
-        console.log(res)
+        console.log(res?.data?.choices)
         const cnt = res?.data?.choices?.[0]?.message.content.match(/(?<=`{3})[^`]+(?=`{3})/g)[0].replace('json', '');
         console.log('\nmpt-------success', res, cnt, '\n');
         console.log('{\n' +
