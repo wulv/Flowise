@@ -58,7 +58,7 @@ export class MptModel extends BaseChatModel {
     /** @ignore */
     async _generate(messages, options, runManager) {
         // console.log(this.inferenceUrl, 'inferenceUrl=================', messages[1]?.text)
-        // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
+        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx', messages[0]?.text.replace(/\n/g, ''), '\n', messages[1]?.text.replace(/\n/g, ''));
         
         const res = await axios.post(this.inferenceUrl, {
             "messages":[{"role":"system","content": messages[0]?.text.replace(/\n/g, '')},{"content": messages[1]?.text.replace(/\n/g, '') + '-----------!!!BE ATTENTION: you must to respond with a markdown code snippet of a json blob with a single action, and NOTHING else!!!',"role":"user"}],
